@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Tuhrembi-meta.biosis</title>
-    <!-- TELEGRAM MINI APP SCRIPT -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         /* ------------------- */
         /* --- CORE STYLES --- */
@@ -83,7 +81,6 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.9);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -146,116 +143,185 @@
             font-size: inherit;
         }
 
+        /* --- THEME-AWARE SLIDER --- */
         .ui-panel input[type="range"] {
-            -webkit-appearance: none; appearance: none; width: 100%; height: 8px;
-            background: rgba(0,0,0,0.5); outline: none; border: 1px solid var(--accent-color-1);
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.5);
+            outline: none;
+            border: 1px solid var(--accent-color-1);
         }
+        
         .ui-panel input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none; width: 20px; height: 20px;
-            background: var(--accent-color-2); cursor: pointer; border: 1px solid var(--accent-color-1); border-radius: 50%;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color-2);
+            cursor: pointer;
+            border: 1px solid var(--accent-color-1);
+            border-radius: 50%;
         }
+
         .ui-panel input[type="range"]::-moz-range-thumb {
-            width: 20px; height: 20px; background: var(--accent-color-2); cursor: pointer;
-            border: 1px solid var(--accent-color-1); border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color-2);
+            cursor: pointer;
+            border: 1px solid var(--accent-color-1);
+            border-radius: 50%;
         }
 
         /* ------------------- */
         /* --- CLOCK --- */
         /* ------------------- */
         #multiverse-clock {
-            position: relative; width: 15vw; height: 15vw; min-width: 150px;
-            min-height: 150px; border: 2px solid var(--accent-color-1); border-radius: 50%; pointer-events: all;
+            position: relative;
+            width: 15vw;
+            height: 15vw;
+            min-width: 150px;
+            min-height: 150px;
+            border: 2px solid var(--accent-color-1);
+            border-radius: 50%;
+            pointer-events: all;
         }
+
         .clock-hand {
-            position: absolute; bottom: 50%; left: 50%; width: 2px;
-            background-color: var(--accent-color-2); transform-origin: bottom;
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            width: 2px;
+            background-color: var(--accent-color-2);
+            transform-origin: bottom;
         }
 
         /* ------------------- */
         /* --- CHAOS ELEMENTS --- */
         /* ------------------- */
         .data-stream {
-            position: fixed; top: 0; left: 0; writing-mode: vertical-rl; text-orientation: mixed;
-            white-space: nowrap; font-size: 10px; opacity: 0.3; color: var(--accent-color-1);
-            pointer-events: none; animation: fall linear infinite;
+            position: fixed;
+            top: 0;
+            left: 0;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            white-space: nowrap;
+            font-size: 10px;
+            opacity: 0.3;
+            color: var(--accent-color-1);
+            pointer-events: none;
+            animation: fall linear infinite;
         }
-        @keyframes fall { to { transform: translateY(100vh); } }
+
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
         
         .dead-pixel {
-            position: fixed; width: 2px; height: 2px; background: white; z-index: 9999; pointer-events: none;
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: white;
+            z-index: 9999;
+            pointer-events: none;
         }
         
         #glitch-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff;
-            z-index: 9998; pointer-events: none; opacity: 0; mix-blend-mode: difference;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: difference;
         }
 
         #portal-container {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0;
-            height: 0; overflow: hidden; z-index: 50; clip-path: circle(0% at 50% 50%);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            z-index: 50;
+            clip-path: circle(0% at 50% 50%);
             transition: clip-path 0.5s ease-in-out;
         }
-        #portal-container.active { width: 80vmax; height: 80vmax; clip-path: circle(75% at 50% 50%); }
+        #portal-container.active {
+            width: 80vmax;
+            height: 80vmax;
+            clip-path: circle(75% at 50% 50%);
+        }
 
         #custom-cursor {
-            position: fixed; width: 20px; height: 20px; border: 1px solid var(--text-color);
-            border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
-            z-index: 10000; mix-blend-mode: difference;
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--text-color);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            mix-blend-mode: difference;
             transition: background-color 0.2s, transform 0.2s, width 0.2s, height 0.2s;
         }
         
         /* --- JUMPSCARE OVERLAYS --- */
-        .scare-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; display: none; opacity: 0; transition: opacity 0.05s;
-        }
         #jumpscare-overlay {
-            background-size: cover; background-position: center center; background-repeat: no-repeat;
-            z-index: 10001;
-        }
-        .text-scare {
-            z-index: 10002; display: none; justify-content: center; align-items: center;
-            font-size: 10vw; font-weight: bold; text-align: center;
-            text-shadow: 0 0 10px #000, 0 0 20px #000;
-        }
-        #user-data-scare-overlay { color: #ff2222; }
-
-        /* --- STATIC SETTINGS POPUP --- */
-        #settings-popup {
             position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80vw;
-            max-width: 400px;
-            background-color: rgba(10, 10, 10, 0.95);
-            border: 2px solid #555;
-            padding: 2em;
-            z-index: 20000; /* Above everything */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            z-index: 10001; /* Higher than cursor */
+            pointer-events: none;
             display: none;
-            flex-direction: column;
-            gap: 1em;
-            font-family: monospace;
-            color: #eee;
-            pointer-events: all;
-            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.05s; /* Fast fade in/out */
         }
-        #settings-popup h2 { text-align: center; margin-bottom: 1em; color: #fff; }
-        #settings-popup button {
-            background: #333; color: #eee; border: 1px solid #777;
-            padding: 1em; font-size: 1rem; cursor: none;
+
+        #text-scare-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10002; /* Highest level */
+            pointer-events: none;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 15vw;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 0 10px #000, 0 0 20px #000;
+            opacity: 0;
+            transition: opacity 0.05s;
         }
-        #settings-popup button:hover { background: #555; }
     </style>
 </head>
 <body>
 
     <canvas id="webgl-canvas"></canvas>
     <canvas id="echo-canvas"></canvas>
+    
     <div id="custom-cursor"></div>
 
     <div class="overlay-container">
         <div id="multiverse-clock"></div>
-        <div class="content-block"><div id="tuhrembi-content" class="tuhrembi-text"></div></div>
+
+        <div class="content-block">
+            <div id="tuhrembi-content" class="tuhrembi-text"></div>
+        </div>
+        
         <div class="ui-panel">
             <button id="stabilize-button">[Stabilize]</button>
             <input id="chaos-slider" type="range" min="0" max="100" value="50">
@@ -266,41 +332,14 @@
     <div id="portal-container"></div>
     
     <!-- JUMPSCARE CONTAINERS -->
-    <div id="jumpscare-overlay" class="scare-overlay"></div>
-    <div id="text-scare-overlay" class="scare-overlay text-scare"></div>
-    <div id="user-data-scare-overlay" class="scare-overlay text-scare"></div>
+    <div id="jumpscare-overlay"></div>
+    <div id="text-scare-overlay"></div>
     
-    <!-- STATIC SETTINGS POPUP -->
-    <div id="settings-popup">
-        <h2>[SETTINGS]</h2>
-        <button id="toggle-sound-btn">Sound: ON</button>
-        <button id="toggle-vibration-btn">Vibration: OFF</button>
-        <button id="close-settings-btn" style="margin-top: 1em;">[Close]</button>
-    </div>
+    <div id="initial-prompt">Initiate Tuhrembi-meta.biosis<br><small>(Click to Enter)</small></div>
 
-    <div id="initial-prompt">
-        <span>Initiate Tuhrembi-meta.biosis</span>
-        <small style="margin-top: 1em;">(Click to Enter)</small>
-        <small id="tg-prompt" style="margin-top: 2em; font-size: 1rem; color: #aaa; display: none;">Initializing Telegram Interface...</small>
-    </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
     <script>
-    // --- TELEGRAM MINI APP INITIALIZATION ---
-    let webApp = null;
-    let userData = null;
-    if (window.Telegram && window.Telegram.WebApp) {
-        webApp = window.Telegram.WebApp;
-        document.getElementById('tg-prompt').style.display = 'block';
-        webApp.ready();
-        webApp.expand();
-        webApp.requestFullscreen();
-        if (webApp.initDataUnsafe && webApp.initDataUnsafe.user) {
-            userData = webApp.initDataUnsafe.user;
-        }
-        webApp.SettingsButton.show();
-        webApp.SettingsButton.onClick(showSettingsPopup);
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
         const prompt = document.getElementById('initial-prompt');
         prompt.addEventListener('click', () => {
@@ -319,9 +358,8 @@
         let isScreamerActive = false;
         let heartHoverTimeout = null;
         let chaosLevel = 0.5;
-        let isSoundOn = true;
-        let isVibrationOn = false;
 
+        // --- INTERACTION STATE ---
         let draggedObject = null;
         const dragMouseHistory = [];
 
@@ -329,29 +367,250 @@
         // FEATURE 1: MULTIVERSE CLOCK & TEMPORAL INSTABILITY
         // ==========================================================================================
         class MultiverseClock {
-            constructor(containerId) { this.container = document.getElementById(containerId); this.hands = []; this.handCount = 3; this.createHands(); }
-            createHands() { for (let i = 0; i < this.handCount; i++) { const hand = document.createElement('div'); hand.className = 'clock-hand'; hand.style.height = `${Math.random() * 40 + 10}%`; hand.dataset.speed = (Math.random() - 0.5) * 20; hand.dataset.angle = Math.random() * 360; this.container.appendChild(hand); this.hands.push(hand); } }
-            update() { this.hands.forEach(hand => { let angle = parseFloat(hand.dataset.angle); let speed = parseFloat(hand.dataset.speed) * (1 + chaosLevel); angle += speed * 0.1; if (Math.random() > 0.995) { hand.dataset.speed = (Math.random() - 0.5) * 20; } hand.dataset.angle = angle; hand.style.transform = `translateX(-50%) rotate(${angle}deg)`; if (Math.random() > 0.99) { hand.style.filter = `blur(${Math.random() * 5}px) opacity(${Math.random()})`; } else if (Math.random() > 0.95) { hand.style.filter = 'none'; } }); if (Math.random() > (0.998 - chaosLevel * 0.01) && this.hands.length < 15) { this.handCount++; this.createHands(); } if (Math.random() > (0.998 - chaosLevel * 0.01) && this.hands.length > 2) { this.container.removeChild(this.hands.pop()); } }
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                this.hands = [];
+                this.handCount = 3;
+                this.createHands();
+            }
+
+            createHands() {
+                for (let i = 0; i < this.handCount; i++) {
+                    const hand = document.createElement('div');
+                    hand.className = 'clock-hand';
+                    hand.style.height = `${Math.random() * 40 + 10}%`;
+                    hand.dataset.speed = (Math.random() - 0.5) * 20;
+                    hand.dataset.angle = Math.random() * 360;
+                    this.container.appendChild(hand);
+                    this.hands.push(hand);
+                }
+            }
+            
+            update() {
+                this.hands.forEach(hand => {
+                    let angle = parseFloat(hand.dataset.angle);
+                    let speed = parseFloat(hand.dataset.speed) * (1 + chaosLevel); // Speed influenced by chaos
+                    
+                    angle += speed * 0.1;
+                    if (Math.random() > 0.995) {
+                        hand.dataset.speed = (Math.random() - 0.5) * 20;
+                    }
+                    
+                    hand.dataset.angle = angle;
+                    hand.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+                    
+                    if (Math.random() > 0.99) {
+                        hand.style.filter = `blur(${Math.random() * 5}px) opacity(${Math.random()})`;
+                    } else if (Math.random() > 0.95) {
+                        hand.style.filter = 'none';
+                    }
+                });
+
+                if (Math.random() > (0.998 - chaosLevel * 0.01) && this.hands.length < 15) {
+                    this.handCount++;
+                    this.createHands();
+                }
+                if (Math.random() > (0.998 - chaosLevel * 0.01) && this.hands.length > 2) {
+                    this.container.removeChild(this.hands.pop());
+                }
+            }
         }
         const clock = new MultiverseClock('multiverse-clock');
 
-        const UNIVERSE_THEMES = [ { name: 'Quantum Foam', colors: ['#010508', '#aaffff', '#ff00aa', '#aaff00'], font: "'Courier New', monospace", layout: ['column', 'flex-start', 'center'] }, { name: 'Entropic Heat Death', colors: ['#300', '#622', '#944', '#f88'], font: "'Times New Roman', serif", layout: ['row-reverse', 'flex-end', 'flex-end'] }, { name: 'Digital Singularity', colors: ['#000', '#0f0', '#0a0', '#050'], font: "'VT323', monospace", layout: ['row', 'center', 'space-between'] }, { name: 'Void Construct', colors: ['#fff', '#000', '#555', '#aaa'], font: "'Arial', sans-serif", layout: ['column-reverse', 'center', 'space-around'] }, { name: 'Superstring Symphony', colors: ['#1d0d2c', '#f0f', '#0ff', '#ff0'], font: "'Georgia', serif", layout: ['row', 'stretch', 'stretch'] }, { name: 'Blood Hive', colors: ['#2e0000', '#ff4d4d', '#ff0000', '#8b0000'], font: "'Creepster', cursive", layout: ['column', 'stretch', 'stretch'] }, { name: 'Cosmic Horror', colors: ['#02000f', '#96004b', '#4a0025', '#ff007b'], font: "'UnifrakturMaguntia', cursive", layout: ['column', 'center', 'space-around'] }, { name: 'Flesh Construct', colors: ['#4a2e2e', '#ffb3b3', '#a76a6a', '#ff8080'], font: "'Butcherman', cursive", layout: ['column-reverse', 'stretch', 'stretch'] }, { name: 'Corrupted Data', colors: ['#ffff00', '#ff00ff', '#00ffff', '#000000'], font: "'Glitch Goblin', sans-serif", layout: ['row-reverse', 'flex-end', 'flex-end'] }, { name: 'Eldritch Machine', colors: ['#1a1a1a', '#b3ff00', '#5c8a00', '#8cff00'], font: "'Roboto Mono', monospace", layout: ['column', 'center', 'center'] } ];
+        const UNIVERSE_THEMES = [
+            // Original Set
+            { name: 'Quantum Foam', colors: ['#010508', '#aaffff', '#ff00aa', '#aaff00'], font: "'Courier New', monospace", layout: ['column', 'flex-start', 'center'] },
+            { name: 'Entropic Heat Death', colors: ['#300', '#622', '#944', '#f88'], font: "'Times New Roman', serif", layout: ['row-reverse', 'flex-end', 'flex-end'] },
+            { name: 'Digital Singularity', colors: ['#000', '#0f0', '#0a0', '#050'], font: "'VT323', monospace", layout: ['row', 'center', 'space-between'] },
+            { name: 'Void Construct', colors: ['#fff', '#000', '#555', '#aaa'], font: "'Arial', sans-serif", layout: ['column-reverse', 'center', 'space-around'] },
+            { name: 'Superstring Symphony', colors: ['#1d0d2c', '#f0f', '#0ff', '#ff0'], font: "'Georgia', serif", layout: ['row', 'stretch', 'stretch'] },
+            { name: 'Solar Flare', colors: ['#100', '#FFD700', '#FF4500', '#FFFF00'], font: "'Orbitron', sans-serif", layout: ['column', 'center', 'center'] },
+            { name: 'Glacial Rift', colors: ['#E6F7FF', '#001A29', '#005F7F', '#80DFFF'], font: "'Helvetica Neue', sans-serif", layout: ['row', 'flex-start', 'flex-start'] },
+            { name: 'Cyberpunk Grid', colors: ['#0a011f', '#ff00ff', '#00ffff', '#710193'], font: "'Major Mono Display', monospace", layout: ['column-reverse', 'flex-end', 'space-between'] },
+            { name: 'Aetherial Plane', colors: ['#f0e8ff', '#522b7a', '#c09eff', '#8d5ad1'], font: "'Playfair Display', serif", layout: ['row-reverse', 'center', 'space-around'] },
+            { name: 'Art Deco Decay', colors: ['#0F1F17', '#E8D5A2', '#A67B5B', '#4C594A'], font: "'Cinzel', serif", layout: ['row', 'center', 'space-evenly'] },
+            { name: 'Blood Hive', colors: ['#2e0000', '#ff4d4d', '#ff0000', '#8b0000'], font: "'Creepster', cursive", layout: ['column', 'stretch', 'stretch'] },
+            
+            // New Additions
+            { name: 'Cosmic Horror', colors: ['#02000f', '#96004b', '#4a0025', '#ff007b'], font: "'UnifrakturMaguntia', cursive", layout: ['column', 'center', 'space-around'] },
+            { name: 'Nuclear Winter', colors: ['#cccccc', '#333333', '#666666', '#999999'], font: "'Special Elite', cursive", layout: ['row', 'flex-start', 'space-between'] },
+            { name: 'Flesh Construct', colors: ['#4a2e2e', '#ffb3b3', '#a76a6a', '#ff8080'], font: "'Butcherman', cursive", layout: ['column-reverse', 'stretch', 'stretch'] },
+            { name: 'Corrupted Data', colors: ['#ffff00', '#ff00ff', '#00ffff', '#000000'], font: "'Glitch Goblin', sans-serif", layout: ['row-reverse', 'flex-end', 'flex-end'] },
+            { name: 'Eldritch Machine', colors: ['#1a1a1a', '#b3ff00', '#5c8a00', '#8cff00'], font: "'Roboto Mono', monospace", layout: ['column', 'center', 'center'] },
+            { name: 'Black Hole Singularity', colors: ['#000000', '#ffffff', '#222222', '#444444'], font: "'Anonymous Pro', monospace", layout: ['row', 'center', 'center'] },
+            { name: 'Dyson Swarm', colors: ['#050505', '#ffcc00', '#ff9900', '#ff6600'], font: "'Exo 2', sans-serif", layout: ['column-reverse', 'flex-start', 'space-evenly'] },
+            { name: 'Oceanic Abyss', colors: ['#000020', '#00aaff', '#00557f', '#00ffff'], font: "'Bubbler One', sans-serif", layout: ['row', 'flex-end', 'space-between'] },
+            { name: 'Jungle Overgrowth', colors: ['#002a00', '#00ff00', '#55ff55', '#aaffaa'], font: "'Fira Code', monospace", layout: ['column', 'stretch', 'space-around'] },
+            { name: 'Molten Core', colors: ['#200000', '#ff4500', '#ff8c00', '#ffd700'], font: "'Black Ops One', sans-serif", layout: ['row-reverse', 'center', 'center'] },
+            { name: 'Phantom Zone', colors: ['#eeeeee', '#888888', '#bbbbbb', '#cccccc'], font: "'Spectral', serif", layout: ['column', 'center', 'space-between'] },
+            { name: 'Gilded Cage', colors: ['#1a1a00', '#ffd700', '#b8860b', '#f0e68c'], font: "'Uncial Antiqua', cursive", layout: ['row', 'center', 'space-evenly'] },
+            { name: 'Acid Trip', colors: ['#ff00ff', '#00ff00', '#ffff00', '#00ffff'], font: "'Monoton', cursive", layout: ['column-reverse', 'center', 'center'] },
+            { name: 'Rust Belt', colors: ['#4a2e2e', '#b7410e', '#80330f', '#d35400'], font: "'Press Start 2P', cursive", layout: ['row', 'flex-start', 'flex-start'] },
+            { name: 'Holographic Ghost', colors: ['#010105', '#00aaff', '#ff00ff', '#ffffff'], font: "'Nova Square', sans-serif", layout: ['column', 'flex-end', 'flex-end'] },
+            { name: 'Radioactive Isotope', colors: ['#1a2a1a', '#b3ff00', '#00ff00', '#ffff00'], font: "'Turret Road', sans-serif", layout: ['row', 'space-around', 'center'] },
+            { name: 'Crystalline Entity', colors: ['#e0ffff', '#40e0d0', '#00ced1', '#afeeee'], font: "'Philosopher', sans-serif", layout: ['column-reverse', 'flex-start', 'center'] },
+            { name: 'Ashen Waste', colors: ['#3d3d3d', '#a9a9a9', '#696969', '#808080'], font: "'Cormorant Garamond', serif", layout: ['row-reverse', 'stretch', 'space-between'] },
+            { name: 'Warframe', colors: ['#0c0e1a', '#c0c0c0', '#ffd700', '#87ceeb'], font: "'Warframe', sans-serif", layout: ['column', 'center', 'space-evenly'] },
+            { name: 'Subspace Anomaly', colors: ['#000010', '#9400d3', '#4b0082', '#8a2be2'], font: "'Share Tech Mono', monospace", layout: ['row', 'flex-end', 'space-around'] },
+            { name: 'Forgotten Temple', colors: ['#2f4f4f', '#a0522d', '#8b4513', '#d2691e'], font: "'Marcellus SC', serif", layout: ['column', 'flex-start', 'space-evenly'] },
+        ];
+
+
+        function applyTheme(theme) {
+            currentUniverseTheme = theme;
+            const root = document.documentElement;
+            root.style.setProperty('--bg-color', theme.colors[0]);
+            root.style.setProperty('--text-color', theme.colors[1]);
+            root.style.setProperty('--accent-color-1', theme.colors[2]);
+            root.style.setProperty('--accent-color-2', theme.colors[3]);
+            root.style.setProperty('--font-family', theme.font);
+            root.style.setProperty('--main-layout-direction', theme.layout[0]);
+            root.style.setProperty('--content-alignment', theme.layout[1]);
+            root.style.setProperty('--content-justification', theme.layout[2]);
+            document.querySelectorAll('.tuhrembi-glyph').forEach(g => g.style.stroke = theme.colors[1]);
+
+            const newSize = Math.random() * 0.8 + 0.8;
+            root.style.setProperty('--font-size', `${newSize}vw`);
+
+            if(threeScene) threeScene.updateUniverse(theme);
+        }
         
-        function applyTheme(theme) { currentUniverseTheme = theme; const root = document.documentElement; root.style.setProperty('--bg-color', theme.colors[0]); root.style.setProperty('--text-color', theme.colors[1]); root.style.setProperty('--accent-color-1', theme.colors[2]); root.style.setProperty('--accent-color-2', theme.colors[3]); root.style.setProperty('--font-family', theme.font); root.style.setProperty('--main-layout-direction', theme.layout[0]); root.style.setProperty('--content-alignment', theme.layout[1]); root.style.setProperty('--content-justification', theme.layout[2]); document.querySelectorAll('.tuhrembi-glyph').forEach(g => g.style.stroke = theme.colors[1]); const newSize = Math.random() * 0.8 + 0.8; root.style.setProperty('--font-size', `${newSize}vw`); if(threeScene) threeScene.updateUniverse(theme); }
-        
-        function timeJump() { playRandomVibration(); if (isScreamerActive) return; if (Math.random() < 0.005) { threeScene.triggerScreamer(); return; } threeScene.triggerJumpSound(); if (cursorHistory.length > 10) { pastHistories.push({ path: [...cursorHistory], color: currentUniverseTheme.colors[2], life: 200, speed: Math.random() * 0.5 + 0.5, current_index: 0 }); if (pastHistories.length > 5) pastHistories.shift(); cursorHistory.length = 0; } const glitchOverlay = document.getElementById('glitch-overlay'); const mainContainer = document.querySelector('.overlay-container'); glitchOverlay.style.opacity = '0.7'; mainContainer.style.transform = `skewX(${(Math.random() - 0.5) * 20}deg)`; setTimeout(() => { glitchOverlay.style.opacity = '0'; mainContainer.style.transform = 'none'; const newTheme = UNIVERSE_THEMES[Math.floor(Math.random() * UNIVERSE_THEMES.length)]; applyTheme(newTheme); tuhrembiGenerator.populate(); dataStreamManager.resetStreams(); }, Math.random() * 150 + 50); const nextJumpDelay = Math.random() * 15000 + 5000; setTimeout(timeJump, nextJumpDelay); }
-        
-        const echoCanvas = document.getElementById('echo-canvas'); const echoCtx = echoCanvas.getContext('2d'); echoCanvas.width = window.innerWidth; echoCanvas.height = window.innerHeight;
-        function drawEchoes() { echoCtx.clearRect(0, 0, echoCanvas.width, echoCanvas.height); for (let i = pastHistories.length - 1; i >= 0; i--) { const history = pastHistories[i]; history.life--; if (history.life <= 0) { pastHistories.splice(i, 1); continue; } echoCtx.beginPath(); echoCtx.strokeStyle = `${history.color}${Math.floor(history.life/200 * 255).toString(16).padStart(2, '0')}`; echoCtx.lineWidth = 2; const endIndex = Math.floor(history.current_index); if (history.path.length > 1) { echoCtx.moveTo(history.path[0].x, history.path[0].y); for (let j = 1; j < endIndex && j < history.path.length; j++) { echoCtx.lineTo(history.path[j].x, history.path[j].y); } } echoCtx.stroke(); history.current_index += history.speed; if (history.current_index > history.path.length) { history.current_index = 0; } } }
+        function timeJump() {
+            if (isScreamerActive) return;
+
+            if (Math.random() < 0.005) {
+                threeScene.triggerScreamer();
+                return;
+            }
+
+            threeScene.triggerJumpSound();
+            
+            if (cursorHistory.length > 10) {
+                pastHistories.push({ path: [...cursorHistory], color: currentUniverseTheme.colors[2], life: 200, speed: Math.random() * 0.5 + 0.5, current_index: 0 });
+                if (pastHistories.length > 5) pastHistories.shift();
+                cursorHistory.length = 0;
+            }
+
+            const glitchOverlay = document.getElementById('glitch-overlay');
+            const mainContainer = document.querySelector('.overlay-container');
+            glitchOverlay.style.opacity = '0.7';
+            mainContainer.style.transform = `skewX(${(Math.random() - 0.5) * 20}deg)`;
+            
+            setTimeout(() => {
+                glitchOverlay.style.opacity = '0';
+                mainContainer.style.transform = 'none';
+
+                const newTheme = UNIVERSE_THEMES[Math.floor(Math.random() * UNIVERSE_THEMES.length)];
+                applyTheme(newTheme);
+                
+                tuhrembiGenerator.populate();
+                dataStreamManager.resetStreams();
+
+            }, Math.random() * 150 + 50);
+
+            const nextJumpDelay = Math.random() * 15000 + 5000;
+            setTimeout(timeJump, nextJumpDelay);
+        }
+
+        const echoCanvas = document.getElementById('echo-canvas');
+        const echoCtx = echoCanvas.getContext('2d');
+        echoCanvas.width = window.innerWidth; echoCanvas.height = window.innerHeight;
+
+        function drawEchoes() {
+            echoCtx.clearRect(0, 0, echoCanvas.width, echoCanvas.height);
+            for (let i = pastHistories.length - 1; i >= 0; i--) {
+                const history = pastHistories[i];
+                history.life--;
+                if (history.life <= 0) {
+                    pastHistories.splice(i, 1);
+                    continue;
+                }
+
+                echoCtx.beginPath();
+                echoCtx.strokeStyle = `${history.color}${Math.floor(history.life/200 * 255).toString(16).padStart(2, '0')}`;
+                echoCtx.lineWidth = 2;
+
+                const endIndex = Math.floor(history.current_index);
+                if (history.path.length > 1) {
+                    echoCtx.moveTo(history.path[0].x, history.path[0].y);
+                    for (let j = 1; j < endIndex && j < history.path.length; j++) {
+                        echoCtx.lineTo(history.path[j].x, history.path[j].y);
+                    }
+                }
+                echoCtx.stroke();
+                
+                history.current_index += history.speed;
+                if (history.current_index > history.path.length) {
+                    history.current_index = 0; // Loop the replay
+                }
+            }
+        }
 
         // ==========================================================================================
         // FEATURE 2: THE "TUHREMBI" LANGUAGE
         // ==========================================================================================
         class TuhrembiGenerator {
-            constructor(containerId) { this.container = document.getElementById(containerId); this.flickerChars = "ХÖЛÆИΨΩきモタçøאקお😂❤️✨"; }
-            generateGlyphSVG() { const size = 24; let path = `M${Math.random()*size} ${Math.random()*size}`; const segments = Math.floor(Math.random() * 3) + 2; for (let i = 0; i < segments; i++) { const type = [' L', ' Q', ' C'][Math.floor(Math.random()*3)]; path += type; switch (type) { case ' L': path += `${Math.random()*size} ${Math.random()*size}`; break; case ' Q': path += `${Math.random()*size} ${Math.random()*size}, ${Math.random()*size} ${Math.random()*size}`; break; case ' C': path += `${Math.random()*size} ${Math.random()*size}, ${Math.random()*size} ${Math.random()*size}, ${Math.random()*size} ${Math.random()*size}`; break; } } return `<svg class="tuhrembi-glyph" viewBox="0 0 ${size} ${size}"><path d="${path}"/></svg>`; }
-            populate(paragraphs = 3) { let content = ''; for (let p = 0; p < paragraphs; p++) { content += '<p>'; const words = Math.floor(Math.random() * 20) + 10; for (let w = 0; w < words; w++) { content += '<span class="tuhrembi-word">'; const glyphs = Math.floor(Math.random() * 7) + 2; for (let g = 0; g < glyphs; g++) { content += this.generateGlyphSVG(); } content += '</span> '; } content += '</p>'; } this.container.innerHTML = content; this.addInteractivity(); }
-            addInteractivity() { this.container.querySelectorAll('.tuhrembi-word').forEach(word => { word.dataset.original = word.innerHTML; let flickerInterval = null; word.addEventListener('mouseenter', () => { if (flickerInterval) clearInterval(flickerInterval); flickerInterval = setInterval(() => { let newHTML = ''; for (let i = 0; i < word.children.length; i++) { newHTML += `<span style="color: ${currentUniverseTheme.colors[Math.floor(Math.random()*3)+1]}">${this.flickerChars[Math.floor(Math.random()*this.flickerChars.length)]}</span>`; } word.innerHTML = newHTML; }, 50); }); word.addEventListener('mouseleave', () => { clearInterval(flickerInterval); flickerInterval = null; word.innerHTML = word.dataset.original; }); }); }
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                this.flickerChars = "ХÖЛÆИΨΩきモタçøאקお😂❤️✨";
+            }
+            
+            generateGlyphSVG() {
+                const size = 24;
+                let path = `M${Math.random()*size} ${Math.random()*size}`;
+                const segments = Math.floor(Math.random() * 3) + 2;
+                for (let i = 0; i < segments; i++) {
+                    const type = [' L', ' Q', ' C'][Math.floor(Math.random()*3)];
+                    path += type;
+                    switch (type) {
+                        case ' L': path += `${Math.random()*size} ${Math.random()*size}`; break;
+                        case ' Q': path += `${Math.random()*size} ${Math.random()*size}, ${Math.random()*size} ${Math.random()*size}`; break;
+                        case ' C': path += `${Math.random()*size} ${Math.random()*size}, ${Math.random()*size} ${Math.random()*size}, ${Math.random()*size} ${Math.random()*size}`; break;
+                    }
+                }
+                return `<svg class="tuhrembi-glyph" viewBox="0 0 ${size} ${size}"><path d="${path}"/></svg>`;
+            }
+
+            populate(paragraphs = 3) {
+                let content = '';
+                for (let p = 0; p < paragraphs; p++) {
+                    content += '<p>';
+                    const words = Math.floor(Math.random() * 20) + 10;
+                    for (let w = 0; w < words; w++) {
+                        content += '<span class="tuhrembi-word">';
+                        const glyphs = Math.floor(Math.random() * 7) + 2;
+                        for (let g = 0; g < glyphs; g++) {
+                            content += this.generateGlyphSVG();
+                        }
+                        content += '</span> ';
+                    }
+                    content += '</p>';
+                }
+                this.container.innerHTML = content;
+                this.addInteractivity();
+            }
+
+            addInteractivity() {
+                this.container.querySelectorAll('.tuhrembi-word').forEach(word => {
+                    word.dataset.original = word.innerHTML;
+                    let flickerInterval = null;
+                    word.addEventListener('mouseenter', () => {
+                        if (flickerInterval) clearInterval(flickerInterval);
+                        flickerInterval = setInterval(() => {
+                            let newHTML = '';
+                            for (let i = 0; i < word.children.length; i++) {
+                                newHTML += `<span style="color: ${currentUniverseTheme.colors[Math.floor(Math.random()*3)+1]}">${this.flickerChars[Math.floor(Math.random()*this.flickerChars.length)]}</span>`;
+                            }
+                            word.innerHTML = newHTML;
+                        }, 50);
+                    });
+                    word.addEventListener('mouseleave', () => {
+                        clearInterval(flickerInterval);
+                        flickerInterval = null;
+                        word.innerHTML = word.dataset.original;
+                    });
+                });
+            }
         }
         const tuhrembiGenerator = new TuhrembiGenerator('tuhrembi-content');
 
@@ -361,78 +620,524 @@
         // ==========================================================================================
         class TesseractScene {
             constructor(canvasId) {
-                this.canvas = document.getElementById(canvasId); this.scene = new THREE.Scene(); this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true }); this.renderer.setSize(window.innerWidth, window.innerHeight); this.raycaster = new THREE.Raycaster(); this.particleSystems = []; this.plane = new THREE.Plane(); this.intersection = new THREE.Vector3(); this.offset = new THREE.Vector3();
-                this.scarePhrases = ["DEATH IS NEAR", "U R HACKED", "BISOKJ", "CAN YOU SEE ME?", "BEHIND YOU", "IT'S TOO LATE", "GET OUT", "THEY ARE WATCHING", "WAKE UP"];
-                this.jumpscareOverlay = document.getElementById('jumpscare-overlay'); this.textScareOverlay = document.getElementById('text-scare-overlay'); this.userDataScareOverlay = document.getElementById('user-data-scare-overlay');
-                this.listener = new THREE.AudioListener(); this.camera.add(this.listener); this.audioNodes = {};
-                this.wAngle = 0; this.angles = { xy:0, xz:0, yz:0, xw:0, yw:0, zw:0 }; this.points4D = []; for (let i=0;i<16;i++) { this.points4D.push(new THREE.Vector4((i&1)?1:-1,(i&2)?1:-1,(i&4)?1:-1,(i&8)?1:-1)); } this.originalPoints4D = this.points4D.map(p => p.clone());
-                this.tesseractMaterial = new THREE.LineBasicMaterial({ color: 0xffffff }); this.createTesseract();
-                const heartGeo = new THREE.SphereGeometry(0.15, 16, 16); const heartMat = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.8 }); this.heart = new THREE.Mesh(heartGeo, heartMat); this.tesseract.add(this.heart);
-                this.floatingMeshes = []; this.createFloatingGeometry(); this.glitchPlane = this.createGlitchPlane(); this.scene.add(this.glitchPlane); this.camera.position.z = 5; this.gravity = new THREE.Vector3(0, -0.0001, 0);
-                this.portalScene = new THREE.Scene(); const portalGeo = new THREE.IcosahedronGeometry(5, 1); const portalMat = new THREE.MeshNormalMaterial({ wireframe: true }); this.portalObject = new THREE.Mesh(portalGeo, portalMat); this.portalScene.add(this.portalObject); this.portalScene.background = new THREE.Color(0x550055);
+                this.canvas = document.getElementById(canvasId);
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                
+                this.raycaster = new THREE.Raycaster();
+                this.particleSystems = [];
+
+                this.plane = new THREE.Plane();
+                this.intersection = new THREE.Vector3();
+                this.offset = new THREE.Vector3();
+                
+                // JUMPSCARE ASSETS
+                this.creepyImageURLs = [
+                    'https://images.pexels.com/photos/1729903/pexels-photo-1729903.jpeg', 
+                    'https://images.unsplash.com/photo-1599318042475-27a170744477',
+                    'https://images.unsplash.com/photo-1507502707542-93699351512a',
+                    'https://images.pexels.com/photos/277627/pexels-photo-277627.jpeg',
+                    'https://images.pexels.com/photos/7166723/pexels-photo-7166723.jpeg'
+                ];
+                this.scarePhrases = [
+                    "DEATH IS NEAR", "U R HACKED", "BISOKJ", 
+                    "CAN YOU SEE ME?", "BEHIND YOU", "IT'S TOO LATE", 
+                    "GET OUT", "THEY ARE WATCHING", "WAKE UP"
+                ];
+                this.jumpscareOverlay = document.getElementById('jumpscare-overlay');
+                this.textScareOverlay = document.getElementById('text-scare-overlay');
+
+                this.listener = new THREE.AudioListener();
+                this.camera.add(this.listener);
+                this.audioNodes = {};
+                
+                this.wAngle = 0; this.angles = { xy:0, xz:0, yz:0, xw:0, yw:0, zw:0 };
+                this.points4D = []; 
+                for (let i=0;i<16;i++) {
+                    this.points4D.push(new THREE.Vector4((i&1)?1:-1,(i&2)?1:-1,(i&4)?1:-1,(i&8)?1:-1));
+                }
+                this.originalPoints4D = this.points4D.map(p => p.clone());
+
+                this.tesseractMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+                this.createTesseract();
+                
+                const heartGeo = new THREE.SphereGeometry(0.15, 16, 16);
+                const heartMat = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.8 });
+                this.heart = new THREE.Mesh(heartGeo, heartMat);
+                this.tesseract.add(this.heart);
+
+                this.floatingMeshes = []; this.createFloatingGeometry();
+                this.glitchPlane = this.createGlitchPlane(); this.scene.add(this.glitchPlane);
+                this.camera.position.z = 5; this.gravity = new THREE.Vector3(0, -0.0001, 0);
+
+                this.portalScene = new THREE.Scene(); const portalGeo = new THREE.IcosahedronGeometry(5, 1);
+                const portalMat = new THREE.MeshNormalMaterial({ wireframe: true }); this.portalObject = new THREE.Mesh(portalGeo, portalMat);
+                this.portalScene.add(this.portalObject); this.portalScene.background = new THREE.Color(0x550055);
             }
-            initAudio() { const audioContext = this.listener.context; const masterGain = audioContext.createGain(); masterGain.gain.value = 0.15; this.audioNodes.masterGain = masterGain; const distortion = audioContext.createWaveShaper(); distortion.curve = this.makeDistortionCurve(100); distortion.oversample = '4x'; distortion.connect(masterGain); this.audioNodes.distortion = distortion; const noiseBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 2, audioContext.sampleRate); const output = noiseBuffer.getChannelData(0); for (let i = 0; i < noiseBuffer.length; i++) { output[i] = Math.random() * 2 - 1; } const noiseSource = audioContext.createBufferSource(); noiseSource.buffer = noiseBuffer; noiseSource.loop = true; const noiseFilter = audioContext.createBiquadFilter(); noiseFilter.type = 'lowpass'; noiseFilter.frequency.value = 500; noiseSource.connect(noiseFilter).connect(distortion); noiseSource.start(); this.audioNodes.noiseFilter = noiseFilter; const humOsc1 = audioContext.createOscillator(); humOsc1.type = 'sawtooth'; const humOsc2 = audioContext.createOscillator(); humOsc2.type = 'square'; humOsc1.connect(distortion); humOsc2.connect(distortion); humOsc1.start(); humOsc2.start(); this.audioNodes.humOsc1 = humOsc1; this.audioNodes.humOsc2 = humOsc2; const sirenOsc = audioContext.createOscillator(); sirenOsc.type = 'sine'; const sirenLFO = audioContext.createOscillator(); sirenLFO.type = 'sine'; const sirenLFOGain = audioContext.createGain(); sirenLFOGain.gain.value = 400; sirenLFO.connect(sirenLFOGain).connect(sirenOsc.frequency); sirenOsc.frequency.value = 800; sirenOsc.connect(distortion); sirenOsc.start(); sirenLFO.start(); this.audioNodes.sirenLFO = sirenLFO; const stutterGain = audioContext.createGain(); masterGain.connect(stutterGain).connect(this.listener.gain); const stutterLFO = audioContext.createOscillator(); stutterLFO.type = 'square'; stutterLFO.frequency.value = 10; stutterLFO.connect(stutterGain.gain); stutterLFO.start(); this.audioNodes.stutterLFO = stutterLFO; const jumpscareGain = audioContext.createGain(); jumpscareGain.gain.value = 3.0; const jumpscareCompressor = audioContext.createDynamicsCompressor(); jumpscareCompressor.threshold.setValueAtTime(-3, audioContext.currentTime); jumpscareCompressor.knee.setValueAtTime(10, audioContext.currentTime); jumpscareCompressor.ratio.setValueAtTime(12, audioContext.currentTime); jumpscareCompressor.attack.setValueAtTime(0, audioContext.currentTime); jumpscareCompressor.release.setValueAtTime(0.25, audioContext.currentTime); jumpscareGain.connect(jumpscareCompressor).connect(this.audioNodes.distortion); this.audioNodes.jumpscareGain = jumpscareGain; }
-            makeDistortionCurve(amount) { const k = typeof amount === 'number' ? amount : 50; const n_samples = 44100; const curve = new Float32Array(n_samples); const deg = Math.PI / 180; for (let i = 0; i < n_samples; ++i) { const x = i * 2 / n_samples - 1; curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x)); } return curve; }
-            triggerJumpSound() { if (!this.audioNodes.masterGain) return; const audioContext = this.listener.context; const time = audioContext.currentTime; const jumpOsc = audioContext.createOscillator(); const jumpGain = audioContext.createGain(); jumpOsc.type = 'square'; jumpOsc.connect(jumpGain).connect(this.audioNodes.masterGain); jumpGain.gain.setValueAtTime(0.5, time); jumpOsc.frequency.setValueAtTime(2000, time); jumpGain.gain.exponentialRampToValueAtTime(0.001, time + 0.5); jumpOsc.frequency.exponentialRampToValueAtTime(50, time + 0.5); jumpOsc.start(time); jumpOsc.stop(time + 0.5); }
-            triggerScreamer() { playRandomVibration(); if (isScreamerActive) return; isScreamerActive = true; this.heart.visible = true; for(let i = 0; i < this.points4D.length; i++) { this.points4D[i].x += (Math.random() - 0.5) * 20; this.points4D[i].y += (Math.random() - 0.5) * 20; this.points4D[i].z += (Math.random() - 0.5) * 20; this.points4D[i].w += (Math.random() - 0.5) * 20; } this.heart.scale.set(10, 10, 10); const audioContext = this.listener.context; const time = audioContext.currentTime; const screamerOsc = audioContext.createOscillator(); const screamerGain = audioContext.createGain(); screamerOsc.type = 'sawtooth'; screamerOsc.connect(screamerGain).connect(this.audioNodes.distortion); screamerGain.gain.setValueAtTime(0.7, time); screamerOsc.frequency.setValueAtTime(2000, time); screamerOsc.frequency.linearRampToValueAtTime(8000, time + 0.7); screamerGain.gain.linearRampToValueAtTime(0, time + 0.8); screamerOsc.start(time); screamerOsc.stop(time + 0.8); setTimeout(() => this.endScreamer(), 800); }
-            endScreamer() { for(let i = 0; i < this.points4D.length; i++) { this.points4D[i].copy(this.originalPoints4D[i]); } this.heart.scale.set(1, 1, 1); isScreamerActive = false; }
-            triggerLoudNoise() { playRandomVibration(); if (!this.audioNodes.jumpscareGain) return; const audioContext = this.listener.context; const time = audioContext.currentTime; const noiseGain = audioContext.createGain(); noiseGain.connect(this.audioNodes.jumpscareGain); const osc = audioContext.createOscillator(); osc.type = ['square', 'sawtooth'][Math.floor(Math.random() * 2)]; osc.frequency.setValueAtTime(Math.random() * 1000 + 500, time); osc.detune.setValueAtTime(Math.random() * 400 - 200, time); osc.connect(noiseGain); noiseGain.gain.setValueAtTime(0, time); noiseGain.gain.linearRampToValueAtTime(0.8, time + 0.01); noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.25); osc.start(time); osc.stop(time + 0.25); }
-            triggerJumpscare() { if (isScreamerActive) return; this.triggerLoudNoise(); const imageUrl = `https://this-person-does-not-exist.com/en?_=${Date.now()}`; this.jumpscareOverlay.style.backgroundImage = `url(${imageUrl})`; const filters = `blur(${Math.random() * 5}px) contrast(${Math.random() * 100 + 150}%) saturate(${Math.random() * 50}%) hue-rotate(${Math.floor(Math.random() * 360)}deg) brightness(${Math.random() * 50 + 75}%)`; this.jumpscareOverlay.style.filter = filters; this.jumpscareOverlay.style.display = 'block'; this.jumpscareOverlay.style.opacity = '1'; setTimeout(() => { this.jumpscareOverlay.style.opacity = '0'; setTimeout(() => { this.jumpscareOverlay.style.display = 'none'; }, 100); }, Math.random() * 150 + 100); }
-            triggerTextScare() { if (isScreamerActive) return; this.triggerLoudNoise(); const phrase = this.scarePhrases[Math.floor(Math.random() * this.scarePhrases.length)]; this.textScareOverlay.textContent = phrase; this.textScareOverlay.style.color = [currentUniverseTheme.colors[1], currentUniverseTheme.colors[2], currentUniverseTheme.colors[3]][Math.floor(Math.random()*3)]; this.textScareOverlay.style.transform = `skew(${(Math.random()-0.5)*30}deg) rotate(${(Math.random()-0.5)*10}deg)`; this.textScareOverlay.style.filter = `blur(${Math.random()*2}px)`; this.textScareOverlay.style.display = 'flex'; this.textScareOverlay.style.opacity = '1'; setTimeout(() => { this.textScareOverlay.style.opacity = '0'; setTimeout(() => { this.textScareOverlay.style.display = 'none'; }, 100); }, Math.random() * 250 + 150); }
-            triggerUserDataScare() { if (isScreamerActive || !userData) return; this.triggerLoudNoise(); const dataKeys = ['first_name', 'username', 'id', 'language_code']; const randomKey = dataKeys[Math.floor(Math.random() * dataKeys.length)]; let value = userData[randomKey]; let phrase = `WE KNOW YOUR ${randomKey.toUpperCase()}`; if (value) { phrase += `: ${value}`; } else { phrase = "WE ARE WATCHING YOU"; } this.userDataScareOverlay.textContent = phrase; this.userDataScareOverlay.style.transform = `scale(${Math.random() * 0.5 + 0.8})`; this.userDataScareOverlay.style.display = 'flex'; this.userDataScareOverlay.style.opacity = '1'; setTimeout(() => { this.userDataScareOverlay.style.opacity = '0'; setTimeout(() => { this.userDataScareOverlay.style.display = 'none'; }, 100); }, Math.random() * 350 + 200); }
-            createTesseract() { const geometry = new THREE.BufferGeometry(); const vertices = new Float32Array(32 * 3); geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3)); const indices = []; for (let i = 0; i < 16; i++) { for (let j = i + 1; j < 16; j++) { const p1 = this.points4D[i]; const p2 = this.points4D[j]; const dist = Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y) + Math.abs(p1.z - p2.z) + Math.abs(p1.w - p2.w); if (dist === 2) { indices.push(i, j); } } } geometry.setIndex(indices); this.tesseract = new THREE.LineSegments(geometry, this.tesseractMaterial); this.scene.add(this.tesseract); }
+            
+            initAudio() {
+                const audioContext = this.listener.context;
+                const masterGain = audioContext.createGain();
+                masterGain.gain.value = 0.15;
+                this.audioNodes.masterGain = masterGain;
+
+                const distortion = audioContext.createWaveShaper();
+                distortion.curve = this.makeDistortionCurve(100);
+                distortion.oversample = '4x';
+                distortion.connect(masterGain);
+                this.audioNodes.distortion = distortion;
+
+                const noiseBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 2, audioContext.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < noiseBuffer.length; i++) { output[i] = Math.random() * 2 - 1; }
+                const noiseSource = audioContext.createBufferSource();
+                noiseSource.buffer = noiseBuffer; noiseSource.loop = true;
+                const noiseFilter = audioContext.createBiquadFilter();
+                noiseFilter.type = 'lowpass'; noiseFilter.frequency.value = 500;
+                noiseSource.connect(noiseFilter).connect(distortion);
+                noiseSource.start();
+                this.audioNodes.noiseFilter = noiseFilter;
+                
+                const humOsc1 = audioContext.createOscillator(); humOsc1.type = 'sawtooth';
+                const humOsc2 = audioContext.createOscillator(); humOsc2.type = 'square';
+                humOsc1.connect(distortion); humOsc2.connect(distortion);
+                humOsc1.start(); humOsc2.start();
+                this.audioNodes.humOsc1 = humOsc1; this.audioNodes.humOsc2 = humOsc2;
+
+                const sirenOsc = audioContext.createOscillator(); sirenOsc.type = 'sine';
+                const sirenLFO = audioContext.createOscillator(); sirenLFO.type = 'sine';
+                const sirenLFOGain = audioContext.createGain(); sirenLFOGain.gain.value = 400;
+                sirenLFO.connect(sirenLFOGain).connect(sirenOsc.frequency);
+                sirenOsc.frequency.value = 800;
+                sirenOsc.connect(distortion);
+                sirenOsc.start(); sirenLFO.start();
+                this.audioNodes.sirenLFO = sirenLFO;
+                
+                const stutterGain = audioContext.createGain();
+                masterGain.connect(stutterGain).connect(this.listener.gain);
+                const stutterLFO = audioContext.createOscillator(); stutterLFO.type = 'square'; stutterLFO.frequency.value = 10;
+                stutterLFO.connect(stutterGain.gain);
+                stutterLFO.start();
+                this.audioNodes.stutterLFO = stutterLFO;
+                
+                const jumpscareGain = audioContext.createGain();
+                jumpscareGain.gain.value = 3.0; // Very loud
+                const jumpscareCompressor = audioContext.createDynamicsCompressor(); 
+                jumpscareCompressor.threshold.setValueAtTime(-3, audioContext.currentTime);
+                jumpscareCompressor.knee.setValueAtTime(10, audioContext.currentTime);
+                jumpscareCompressor.ratio.setValueAtTime(12, audioContext.currentTime);
+                jumpscareCompressor.attack.setValueAtTime(0, audioContext.currentTime);
+                jumpscareCompressor.release.setValueAtTime(0.25, audioContext.currentTime);
+                jumpscareGain.connect(jumpscareCompressor).connect(this.audioNodes.distortion);
+                this.audioNodes.jumpscareGain = jumpscareGain;
+            }
+            
+            makeDistortionCurve(amount) {
+                const k = typeof amount === 'number' ? amount : 50;
+                const n_samples = 44100;
+                const curve = new Float32Array(n_samples);
+                const deg = Math.PI / 180;
+                for (let i = 0; i < n_samples; ++i) {
+                    const x = i * 2 / n_samples - 1;
+                    curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+                }
+                return curve;
+            }
+
+            triggerJumpSound() {
+                if (!this.audioNodes.masterGain) return;
+                const audioContext = this.listener.context;
+                const time = audioContext.currentTime;
+
+                const jumpOsc = audioContext.createOscillator();
+                const jumpGain = audioContext.createGain();
+                jumpOsc.type = 'square';
+                jumpOsc.connect(jumpGain).connect(this.audioNodes.masterGain);
+
+                jumpGain.gain.setValueAtTime(0.5, time);
+                jumpOsc.frequency.setValueAtTime(2000, time);
+                jumpGain.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
+                jumpOsc.frequency.exponentialRampToValueAtTime(50, time + 0.5);
+                
+                jumpOsc.start(time);
+                jumpOsc.stop(time + 0.5);
+            }
+
+            triggerScreamer() {
+                if (isScreamerActive) return;
+                isScreamerActive = true;
+                this.heart.visible = true;
+                
+                for(let i = 0; i < this.points4D.length; i++) {
+                    this.points4D[i].x += (Math.random() - 0.5) * 20;
+                    this.points4D[i].y += (Math.random() - 0.5) * 20;
+                    this.points4D[i].z += (Math.random() - 0.5) * 20;
+                    this.points4D[i].w += (Math.random() - 0.5) * 20;
+                }
+                this.heart.scale.set(10, 10, 10);
+
+                const audioContext = this.listener.context;
+                const time = audioContext.currentTime;
+                const screamerOsc = audioContext.createOscillator();
+                const screamerGain = audioContext.createGain();
+                screamerOsc.type = 'sawtooth';
+                screamerOsc.connect(screamerGain).connect(this.audioNodes.distortion);
+                screamerGain.gain.setValueAtTime(0.7, time);
+                screamerOsc.frequency.setValueAtTime(2000, time);
+                screamerOsc.frequency.linearRampToValueAtTime(8000, time + 0.7);
+                screamerGain.gain.linearRampToValueAtTime(0, time + 0.8);
+                screamerOsc.start(time);
+                screamerOsc.stop(time + 0.8);
+                
+                setTimeout(() => this.endScreamer(), 800);
+            }
+
+            endScreamer() {
+                for(let i = 0; i < this.points4D.length; i++) {
+                    this.points4D[i].copy(this.originalPoints4D[i]);
+                }
+                this.heart.scale.set(1, 1, 1);
+                isScreamerActive = false;
+            }
+
+            triggerLoudNoise() {
+                if (!this.audioNodes.jumpscareGain) return;
+                const audioContext = this.listener.context;
+                const time = audioContext.currentTime;
+
+                const noiseGain = audioContext.createGain();
+                noiseGain.connect(this.audioNodes.jumpscareGain);
+
+                const osc = audioContext.createOscillator();
+                osc.type = ['square', 'sawtooth'][Math.floor(Math.random() * 2)];
+                osc.frequency.setValueAtTime(Math.random() * 1000 + 500, time);
+                osc.detune.setValueAtTime(Math.random() * 400 - 200, time);
+                osc.connect(noiseGain);
+                
+                noiseGain.gain.setValueAtTime(0, time);
+                noiseGain.gain.linearRampToValueAtTime(0.8, time + 0.01);
+                noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
+                
+                osc.start(time);
+                osc.stop(time + 0.25);
+            }
+            
+            triggerJumpscare() {
+                if (isScreamerActive) return;
+                
+                this.triggerLoudNoise();
+                
+                const imageUrl = this.creepyImageURLs[Math.floor(Math.random() * this.creepyImageURLs.length)];
+                this.jumpscareOverlay.style.backgroundImage = `url(${imageUrl})`;
+                
+                const filters = `
+                    blur(${Math.random() * 5}px)
+                    contrast(${Math.random() * 100 + 150}%)
+                    saturate(${Math.random() * 50}%)
+                    hue-rotate(${Math.floor(Math.random() * 360)}deg)
+                    brightness(${Math.random() * 50 + 75}%)
+                `;
+                this.jumpscareOverlay.style.filter = filters;
+
+                this.jumpscareOverlay.style.display = 'block';
+                this.jumpscareOverlay.style.opacity = '1';
+                
+                setTimeout(() => {
+                    this.jumpscareOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        this.jumpscareOverlay.style.display = 'none';
+                    }, 100);
+                }, Math.random() * 150 + 100);
+            }
+
+            triggerTextScare() {
+                if (isScreamerActive) return;
+
+                this.triggerLoudNoise();
+
+                const phrase = this.scarePhrases[Math.floor(Math.random() * this.scarePhrases.length)];
+                this.textScareOverlay.textContent = phrase;
+                
+                this.textScareOverlay.style.color = [currentUniverseTheme.colors[1], currentUniverseTheme.colors[2], currentUniverseTheme.colors[3]][Math.floor(Math.random()*3)];
+                this.textScareOverlay.style.transform = `skew(${(Math.random()-0.5)*30}deg) rotate(${(Math.random()-0.5)*10}deg)`;
+                this.textScareOverlay.style.filter = `blur(${Math.random()*2}px)`;
+
+                this.textScareOverlay.style.display = 'flex';
+                this.textScareOverlay.style.opacity = '1';
+
+                setTimeout(() => {
+                    this.textScareOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        this.textScareOverlay.style.display = 'none';
+                    }, 100);
+                }, Math.random() * 250 + 150);
+            }
+
+            createTesseract() {
+                const geometry = new THREE.BufferGeometry();
+                const vertices = new Float32Array(32 * 3);
+                geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+                const indices = [];
+                for (let i = 0; i < 16; i++) {
+                    for (let j = i + 1; j < 16; j++) {
+                        const p1 = this.points4D[i];
+                        const p2 = this.points4D[j];
+                        const dist = Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y) + Math.abs(p1.z - p2.z) + Math.abs(p1.w - p2.w);
+                        if (dist === 2) {
+                            indices.push(i, j);
+                        }
+                    }
+                }
+                geometry.setIndex(indices);
+                this.tesseract = new THREE.LineSegments(geometry, this.tesseractMaterial);
+                this.scene.add(this.tesseract);
+            }
             project4Dto3D(point){ const distance = 2; const w = 1 / (distance - point.w); return new THREE.Vector3(point.x * w, point.y * w, point.z * w); }
             rotate4D(point, angle, plane) { const x = point.x, y = point.y, z = point.z, w = point.w; const c = Math.cos(angle); const s = Math.sin(angle); switch(plane) { case 'xy': return new THREE.Vector4(x*c - y*s, x*s + y*c, z, w); case 'xz': return new THREE.Vector4(x*c - z*s, y, x*s + z*c, w); case 'xw': return new THREE.Vector4(x*c - w*s, y, z, x*s + w*c); case 'yz': return new THREE.Vector4(x, y*c - z*s, y*s + z*c, w); case 'yw': return new THREE.Vector4(x, y*c - w*s, z, y*s + w*c); case 'zw': return new THREE.Vector4(x, y, z*c - w*s, z*s + w*c); } }
             createFloatingGeometry() { for (let i = 0; i < 30; i++) { const geometries = [new THREE.BoxGeometry(0.2, 0.2, 0.2), new THREE.SphereGeometry(0.1, 8, 8), new THREE.TorusKnotGeometry(0.1, 0.03, 100, 16)]; const geometry = geometries[Math.floor(Math.random() * geometries.length)]; const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 }); const mesh = new THREE.Mesh(geometry, material); mesh.position.set((Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 10); mesh.velocity = new THREE.Vector3((Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01); this.scene.add(mesh); this.floatingMeshes.push(mesh); } const light = new THREE.PointLight(0xffffff, 1, 100); light.position.set(0, 0, 5); this.scene.add(light); this.scene.add(new THREE.AmbientLight(0xffffff, 0.2)); }
             createGlitchPlane() { const geometry = new THREE.PlaneGeometry(window.innerWidth/50, window.innerHeight/50); const material = new THREE.ShaderMaterial({ uniforms:{time:{value:1.0},color1:{value:new THREE.Color(0xff00ff)},color2:{value:new THREE.Color(0x00ffff)},},vertexShader:` varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); } `,fragmentShader:` uniform float time; uniform vec3 color1; uniform vec3 color2; varying vec2 vUv; float random (vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123); } void main() { vec2 p = vUv; p.x += sin(p.y * 10.0 + time) * 0.05 * random(p); p.y += cos(p.x * 10.0 + time) * 0.05 * random(p); float r = fract(p.x * p.y * time * 5.0); float g = fract(p.x * p.y * time * 5.1); float b = fract(p.x * p.y * time * 5.2); gl_FragColor = vec4(mix(color1, color2, random(p)), 1.0) * vec4(r,g,b,1.0); }`, transparent: true }); const plane = new THREE.Mesh(geometry, material); plane.position.z = -2; return plane; }
-            updateUniverse(theme) { this.gravity.set((Math.random()-0.5)*0.0002,(Math.random()-0.5)*0.0002,(Math.random()-0.5)*0.0002); const c1=new THREE.Color(theme.colors[2]); const c2=new THREE.Color(theme.colors[3]); this.tesseractMaterial.color = c1; this.floatingMeshes.forEach(mesh=>{mesh.material.color=Math.random()>0.5?c1:c2;const s=Math.random()*0.5+0.5;mesh.scale.set(s,s,s);}); this.glitchPlane.material.uniforms.color1.value = c1; this.glitchPlane.material.uniforms.color2.value = c2; this.heart.material.color = c2; if (this.audioNodes.masterGain) { const audioContext = this.listener.context; const time = audioContext.currentTime; const val = (s, d) => parseInt(s.substring(d, d + 2), 16) / 255; const humFreq1 = 30 + val(theme.colors[0], 1) * 40; const humFreq2 = humFreq1 + 5 + val(theme.colors[1], 3) * 10; this.audioNodes.humOsc1.frequency.linearRampToValueAtTime(humFreq1, time + 1); this.audioNodes.humOsc2.frequency.linearRampToValueAtTime(humFreq2, time + 1); const noiseFreq = 200 + val(theme.colors[2], 1) * 3000; this.audioNodes.noiseFilter.frequency.linearRampToValueAtTime(noiseFreq, time + 1); const sirenSpeed = 0.1 + val(theme.colors[3], 5) * 5; this.audioNodes.sirenLFO.frequency.linearRampToValueAtTime(sirenSpeed, time + 1); const stutterSpeed = 5 + (theme.name.length % 15); this.audioNodes.stutterLFO.frequency.linearRampToValueAtTime(stutterSpeed, time + 1); const distortionAmount = (theme.name.toLowerCase().includes('blood') || theme.name.toLowerCase().includes('horror')) ? 400 : 80; this.audioNodes.distortion.curve = this.makeDistortionCurve(distortionAmount); } }
-            updateHeartEffect() { if (isScreamerActive) return; const heartScreenPos = this.heart.position.clone().project(this.camera); const mouseVec = new THREE.Vector2(mouse.x, mouse.y); const heartVec = new THREE.Vector2(heartScreenPos.x, heartScreenPos.y); const distance = mouseVec.distanceTo(heartVec); const hoverThreshold = 0.1; if (distance < hoverThreshold) { this.heart.material.opacity = 1.0; this.heart.scale.set(1.5, 1.5, 1.5); this.audioNodes.humOsc1.frequency.value += 5; this.audioNodes.humOsc2.frequency.value += 5; if (!heartHoverTimeout) { heartHoverTimeout = setTimeout(() => { timeJump(); heartHoverTimeout = null; }, 2000); } } else { this.heart.material.opacity = 0.8; this.heart.scale.set(1, 1, 1); if (heartHoverTimeout) { clearTimeout(heartHoverTimeout); heartHoverTimeout = null; } } this.heart.visible = distance < 1.0; }
-            animate() { if (Math.random() < (0.001 + chaosLevel * 0.003)) this.triggerJumpscare(); if (Math.random() < (0.001 + chaosLevel * 0.003)) this.triggerTextScare(); if (Math.random() < (0.0015 + chaosLevel * 0.004)) this.triggerUserDataScare(); for (let i = this.particleSystems.length - 1; i >= 0; i--) { const ps = this.particleSystems[i]; const positions = ps.system.geometry.attributes.position.array; for (let j = 0; j < ps.velocities.length; j++) { positions[j*3] += ps.velocities[j].x; positions[j*3+1] += ps.velocities[j].y; positions[j*3+2] += ps.velocities[j].z; } ps.system.geometry.attributes.position.needsUpdate = true; ps.life -= 0.01; ps.system.material.opacity = ps.life; if (ps.life <= 0) { this.scene.remove(ps.system); this.particleSystems.splice(i, 1); } } const positionAttribute = this.tesseract.geometry.getAttribute('position'); for (let i = 0; i < 16; i++) { let p4 = this.points4D[i].clone(); if (!isScreamerActive) { p4 = this.rotate4D(p4, this.angles.xy, 'xy'); p4 = this.rotate4D(p4, this.angles.zw, 'zw'); p4 = this.rotate4D(p4, this.wAngle, 'xw'); } const p3 = this.project4Dto3D(p4); positionAttribute.setXYZ(i, p3.x, p3.y, p3.z); } positionAttribute.needsUpdate = true; if (isScreamerActive) { this.renderer.render(this.scene, this.camera); return; } this.updateHeartEffect(); this.glitchPlane.material.uniforms.time.value += 0.02 * (1 + chaosLevel); this.glitchPlane.visible = chaosLevel > 0.75; const rotSpeed = 0.001 + chaosLevel * 0.002; this.angles.xy += rotSpeed; this.angles.zw += rotSpeed * 1.5; this.floatingMeshes.forEach(mesh => { if (draggedObject !== mesh) { const g = this.gravity.clone().multiplyScalar(1 + chaosLevel * 5); mesh.velocity.add(g); mesh.position.add(mesh.velocity); mesh.rotation.x += mesh.velocity.x; mesh.rotation.y += mesh.velocity.y; if (mesh.position.length() > 10) { mesh.position.set(0,0,0); mesh.velocity.set((Math.random()-0.5)*0.01,(Math.random()-0.5)*0.01,(Math.random()-0.5)*0.01); } } }); this.portalObject.rotation.x += 0.005; this.portalObject.rotation.y += 0.007; this.renderer.render(this.scene, this.camera); }
+            
+            updateUniverse(theme) {
+                // Visual Updates
+                this.gravity.set((Math.random()-0.5)*0.0002,(Math.random()-0.5)*0.0002,(Math.random()-0.5)*0.0002);
+                const c1=new THREE.Color(theme.colors[2]); const c2=new THREE.Color(theme.colors[3]);
+                this.tesseractMaterial.color = c1;
+                this.floatingMeshes.forEach(mesh=>{mesh.material.color=Math.random()>0.5?c1:c2;const s=Math.random()*0.5+0.5;mesh.scale.set(s,s,s);});
+                this.glitchPlane.material.uniforms.color1.value = c1; this.glitchPlane.material.uniforms.color2.value = c2;
+                this.heart.material.color = c2;
+
+                // Audio Updates
+                if (this.audioNodes.masterGain) {
+                    const audioContext = this.listener.context; const time = audioContext.currentTime;
+                    const val = (s, d) => parseInt(s.substring(d, d + 2), 16) / 255;
+                    const humFreq1 = 30 + val(theme.colors[0], 1) * 40;
+                    const humFreq2 = humFreq1 + 5 + val(theme.colors[1], 3) * 10;
+                    this.audioNodes.humOsc1.frequency.linearRampToValueAtTime(humFreq1, time + 1);
+                    this.audioNodes.humOsc2.frequency.linearRampToValueAtTime(humFreq2, time + 1);
+                    const noiseFreq = 200 + val(theme.colors[2], 1) * 3000;
+                    this.audioNodes.noiseFilter.frequency.linearRampToValueAtTime(noiseFreq, time + 1);
+                    const sirenSpeed = 0.1 + val(theme.colors[3], 5) * 5;
+                    this.audioNodes.sirenLFO.frequency.linearRampToValueAtTime(sirenSpeed, time + 1);
+                    const stutterSpeed = 5 + (theme.name.length % 15);
+                    this.audioNodes.stutterLFO.frequency.linearRampToValueAtTime(stutterSpeed, time + 1);
+                    const distortionAmount = (theme.name.toLowerCase().includes('blood') || theme.name.toLowerCase().includes('horror')) ? 400 : 80;
+                    this.audioNodes.distortion.curve = this.makeDistortionCurve(distortionAmount);
+                }
+            }
+
+            updateHeartEffect() {
+                if (isScreamerActive) return;
+
+                const heartScreenPos = this.heart.position.clone().project(this.camera);
+                const mouseVec = new THREE.Vector2(mouse.x, mouse.y);
+                const heartVec = new THREE.Vector2(heartScreenPos.x, heartScreenPos.y);
+                const distance = mouseVec.distanceTo(heartVec);
+
+                const hoverThreshold = 0.1;
+                if (distance < hoverThreshold) {
+                    this.heart.material.opacity = 1.0;
+                    this.heart.scale.set(1.5, 1.5, 1.5);
+                    this.audioNodes.humOsc1.frequency.value += 5;
+                    this.audioNodes.humOsc2.frequency.value += 5;
+
+                    if (!heartHoverTimeout) {
+                        heartHoverTimeout = setTimeout(() => {
+                            timeJump();
+                            heartHoverTimeout = null;
+                        }, 2000); 
+                    }
+                } else {
+                    this.heart.material.opacity = 0.8;
+                    this.heart.scale.set(1, 1, 1);
+                    if (heartHoverTimeout) {
+                        clearTimeout(heartHoverTimeout);
+                        heartHoverTimeout = null;
+                    }
+                }
+                this.heart.visible = distance < 1.0; 
+            }
+            
+            animate() {
+                // --- INCREASED JUMPSCARE CHANCES ---
+                if (Math.random() < (0.0005 + chaosLevel * 0.002)) {
+                    this.triggerJumpscare();
+                }
+                if (Math.random() < (0.0005 + chaosLevel * 0.0025)) {
+                    this.triggerTextScare();
+                }
+
+                // Update particles
+                for (let i = this.particleSystems.length - 1; i >= 0; i--) {
+                    const ps = this.particleSystems[i];
+                    const positions = ps.system.geometry.attributes.position.array;
+                    for (let j = 0; j < ps.velocities.length; j++) {
+                        positions[j*3] += ps.velocities[j].x;
+                        positions[j*3+1] += ps.velocities[j].y;
+                        positions[j*3+2] += ps.velocities[j].z;
+                    }
+                    ps.system.geometry.attributes.position.needsUpdate = true;
+                    ps.life -= 0.01;
+                    ps.system.material.opacity = ps.life;
+                    if (ps.life <= 0) {
+                        this.scene.remove(ps.system);
+                        this.particleSystems.splice(i, 1);
+                    }
+                }
+
+                // Update Tesseract
+                const positionAttribute = this.tesseract.geometry.getAttribute('position');
+                for (let i = 0; i < 16; i++) {
+                    let p4 = this.points4D[i].clone();
+                    if (!isScreamerActive) {
+                       p4 = this.rotate4D(p4, this.angles.xy, 'xy');
+                       p4 = this.rotate4D(p4, this.angles.zw, 'zw');
+                       p4 = this.rotate4D(p4, this.wAngle, 'xw');
+                    }
+                    const p3 = this.project4Dto3D(p4);
+                    positionAttribute.setXYZ(i, p3.x, p3.y, p3.z);
+                }
+                positionAttribute.needsUpdate = true;
+                
+                if (isScreamerActive) {
+                    this.renderer.render(this.scene, this.camera);
+                    return;
+                }
+
+                this.updateHeartEffect();
+                this.glitchPlane.material.uniforms.time.value += 0.02 * (1 + chaosLevel);
+                this.glitchPlane.visible = chaosLevel > 0.75;
+                const rotSpeed = 0.001 + chaosLevel * 0.002;
+                this.angles.xy += rotSpeed; this.angles.zw += rotSpeed * 1.5;
+
+                this.floatingMeshes.forEach(mesh => {
+                    if (draggedObject !== mesh) {
+                        const g = this.gravity.clone().multiplyScalar(1 + chaosLevel * 5);
+                        mesh.velocity.add(g);
+                        mesh.position.add(mesh.velocity);
+                        mesh.rotation.x += mesh.velocity.x;
+                        mesh.rotation.y += mesh.velocity.y;
+                        
+                        if (mesh.position.length() > 10) { 
+                            mesh.position.set(0,0,0);
+                            mesh.velocity.set((Math.random()-0.5)*0.01,(Math.random()-0.5)*0.01,(Math.random()-0.5)*0.01);
+                        }
+                    }
+                });
+
+                this.portalObject.rotation.x += 0.005; this.portalObject.rotation.y += 0.007;
+                this.renderer.render(this.scene, this.camera);
+            }
+
             handleResize() {this.camera.aspect=window.innerWidth/window.innerHeight;this.camera.updateProjectionMatrix();this.renderer.setSize(window.innerWidth,window.innerHeight);echoCanvas.width=window.innerWidth;echoCanvas.height=window.innerHeight;}
             renderPortal(targetElement){this.renderer.setScissorTest(true);const rect=targetElement.getBoundingClientRect();this.renderer.setScissor(rect.left,window.innerHeight-rect.bottom,rect.width,rect.height);this.renderer.setViewport(rect.left,window.innerHeight-rect.bottom,rect.width,rect.height);this.renderer.render(this.portalScene,this.camera);this.renderer.setScissorTest(false);this.renderer.setViewport(0,0,window.innerWidth,window.innerHeight);}
         }
         const threeScene = new TesseractScene('webgl-canvas');
         threeScene.initAudio();
         
-        // --- SETTINGS & VIBRATION ---
-        function showSettingsPopup() { document.getElementById('settings-popup').style.display = 'flex'; }
-        function hideSettingsPopup() { document.getElementById('settings-popup').style.display = 'none'; }
-        function toggleSound() { isSoundOn = !isSoundOn; threeScene.audioNodes.masterGain.gain.value = isSoundOn ? (0.05 + chaosLevel * 0.25) : 0; document.getElementById('toggle-sound-btn').textContent = `Sound: ${isSoundOn ? 'ON' : 'OFF'}`; }
-        function toggleVibration() { isVibrationOn = !isVibrationOn; document.getElementById('toggle-vibration-btn').textContent = `Vibration: ${isVibrationOn ? 'ON' : 'OFF'}`; if(isVibrationOn) playVibration(vibrationPatterns.short); }
-        document.getElementById('toggle-sound-btn').addEventListener('click', toggleSound);
-        document.getElementById('toggle-vibration-btn').addEventListener('click', toggleVibration);
-        document.getElementById('close-settings-btn').addEventListener('click', hideSettingsPopup);
-
-        const vibrationPatterns = {
-            short: [['light', 50]],
-            long: [['heavy', 200]],
-            double: [['medium', 100], ['medium', 100]],
-            error: [['error', 0]],
-            attack: [['light', 50], ['light', 50], ['heavy', 100]]
-        };
-        function playVibration(pattern) { if (!isVibrationOn || !webApp || !webApp.HapticFeedback) return; let delay = 0; pattern.forEach(([style, duration]) => { setTimeout(() => { if (['light', 'medium', 'heavy', 'rigid', 'soft'].includes(style)) webApp.HapticFeedback.impactOccurred(style); else if (['error', 'success', 'warning'].includes(style)) webApp.HapticFeedback.notificationOccurred(style); }, delay); delay += duration; }); }
-        function playRandomVibration() { const patterns = Object.values(vibrationPatterns); playVibration(patterns[Math.floor(Math.random() * patterns.length)]); }
-        
-
         window.addEventListener('wheel', e => { e.preventDefault(); threeScene.wAngle += e.deltaY * 0.001; }, { passive: false });
         const portalContainer = document.getElementById('portal-container'); let portalActive = false;
         
-        window.addEventListener('click', () => { const screamerChance = chaosLevel * 0.10; if (Math.random() < screamerChance) { threeScene.triggerScreamer(); return; } if (Math.random() > 0.95 && !portalActive) { portalActive = true; portalContainer.classList.add('active'); setTimeout(() => { portalContainer.classList.remove('active'); portalActive = false; }, Math.random() * 2000 + 1000); } });
+        window.addEventListener('click', (event) => {
+            const screamerChance = chaosLevel * 0.10; 
+            if (Math.random() < screamerChance) {
+                threeScene.triggerScreamer();
+                return;
+            }
 
-        class DataStreamManager { constructor(count=10){this.streams=[];for(let i=0;i<count;i++){const stream=document.createElement('div');stream.className='data-stream';document.body.appendChild(stream);this.streams.push(stream);} this.resetStreams();} resetStreams(){this.streams.forEach(stream=>{const content=Array(100).fill(0).map(()=>'01'[Math.floor(Math.random()*2)]).join('');stream.textContent=content;stream.style.left=`${Math.random()*100}vw`;stream.style.animationDuration=`${Math.random()*10+5}s`;stream.style.animationDelay=`${Math.random()*-15}s`;});} }
+            if (Math.random() > 0.95 && !portalActive) {
+                 portalActive = true; portalContainer.classList.add('active'); setTimeout(() => { portalContainer.classList.remove('active'); portalActive = false; }, Math.random() * 2000 + 1000);
+            }
+        });
+
+        // ==========================================================================================
+        // FEATURE 4: CHAOTIC UI ELEMENTS & INTERACTION LISTENERS
+        // ==========================================================================================
+        class DataStreamManager {
+            constructor(count=10){this.streams=[];for(let i=0;i<count;i++){const stream=document.createElement('div');stream.className='data-stream';document.body.appendChild(stream);this.streams.push(stream);} this.resetStreams();}
+            resetStreams(){this.streams.forEach(stream=>{const content=Array(100).fill(0).map(()=>'01'[Math.floor(Math.random()*2)]).join('');stream.textContent=content;stream.style.left=`${Math.random()*100}vw`;stream.style.animationDuration=`${Math.random()*10+5}s`;stream.style.animationDelay=`${Math.random()*-15}s`;});}
+        }
         const dataStreamManager = new DataStreamManager();
         
         for (let i = 0; i < 3; i++) { const pixel=document.createElement('div'); pixel.className='dead-pixel'; document.body.appendChild(pixel); setInterval(() => { pixel.style.left=`${Math.random()*100}vw`; pixel.style.top=`${Math.random()*100}vh`; pixel.style.display=Math.random()>0.1?'block':'none'; }, Math.random()*1000+500); }
         document.getElementById('stabilize-button').addEventListener('click', timeJump);
-        document.getElementById('chaos-slider').addEventListener('input', e => { chaosLevel = e.target.value / 100; if (threeScene.audioNodes.masterGain && isSoundOn) { threeScene.audioNodes.masterGain.gain.value = 0.05 + chaosLevel * 0.25; } });
+        document.getElementById('chaos-slider').addEventListener('input', e => { 
+            chaosLevel = e.target.value / 100;
+            if (threeScene.audioNodes.masterGain) { 
+                threeScene.audioNodes.masterGain.gain.value = 0.05 + chaosLevel * 0.25; 
+            }
+        });
         const customCursor = document.getElementById('custom-cursor');
         
-        window.addEventListener('mousemove', e => { mouse.x = (e.clientX / window.innerWidth) * 2 - 1; mouse.y = - (e.clientY / window.innerHeight) * 2 + 1; customCursor.style.left=`${e.clientX}px`; customCursor.style.top=`${e.clientY}px`; cursorHistory.push({x:e.clientX,y:e.clientY}); if(cursorHistory.length>200)cursorHistory.shift(); if (draggedObject) { dragMouseHistory.push({x: mouse.x, y: mouse.y, time: performance.now()}); if (dragMouseHistory.length > 10) dragMouseHistory.shift(); threeScene.raycaster.setFromCamera(mouse, threeScene.camera); threeScene.raycaster.ray.intersectPlane(threeScene.plane, threeScene.intersection); draggedObject.position.copy(threeScene.intersection.sub(threeScene.offset)); } });
-        window.addEventListener('mousedown', () => { customCursor.style.transform='translate(-50%, -50%) scale(0.5)'; threeScene.raycaster.setFromCamera(mouse, threeScene.camera); const intersects = threeScene.raycaster.intersectObjects(threeScene.floatingMeshes); if (intersects.length > 0) { draggedObject = intersects[0].object; draggedObject.velocity.set(0, 0, 0); threeScene.plane.setFromNormalAndCoplanarPoint( threeScene.camera.getWorldDirection(threeScene.plane.normal), draggedObject.position ); if (threeScene.raycaster.ray.intersectPlane(threeScene.plane, threeScene.intersection)) { threeScene.offset.copy(threeScene.intersection).sub(draggedObject.position); } dragMouseHistory.length = 0; } }); 
-        window.addEventListener('mouseup', () => { customCursor.style.transform='translate(-50%, -50%) scale(1)'; if (draggedObject) { if (dragMouseHistory.length > 1) { const lastPoint = dragMouseHistory[dragMouseHistory.length - 1]; const prevPoint = dragMouseHistory[0]; const timeDelta = (lastPoint.time - prevPoint.time) / 1000; if (timeDelta > 0) { const throwVector = new THREE.Vector3( (lastPoint.x - prevPoint.x) / timeDelta, (lastPoint.y - prevPoint.y) / timeDelta, 0 ); throwVector.multiplyScalar(0.1); draggedObject.velocity.copy(throwVector); } } draggedObject = null; } });
+        window.addEventListener('mousemove', e => { 
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
+            customCursor.style.left=`${e.clientX}px`; customCursor.style.top=`${e.clientY}px`; 
+            cursorHistory.push({x:e.clientX,y:e.clientY}); if(cursorHistory.length>200)cursorHistory.shift();
 
+            if (draggedObject) {
+                dragMouseHistory.push({x: mouse.x, y: mouse.y, time: performance.now()});
+                if (dragMouseHistory.length > 10) dragMouseHistory.shift();
+
+                threeScene.raycaster.setFromCamera(mouse, threeScene.camera);
+                threeScene.raycaster.ray.intersectPlane(threeScene.plane, threeScene.intersection);
+                draggedObject.position.copy(threeScene.intersection.sub(threeScene.offset));
+            }
+        });
+        
+        window.addEventListener('mousedown', () => {
+            customCursor.style.transform='translate(-50%, -50%) scale(0.5)';
+            threeScene.raycaster.setFromCamera(mouse, threeScene.camera);
+            const intersects = threeScene.raycaster.intersectObjects(threeScene.floatingMeshes);
+
+            if (intersects.length > 0) {
+                draggedObject = intersects[0].object;
+                draggedObject.velocity.set(0, 0, 0); 
+                
+                threeScene.plane.setFromNormalAndCoplanarPoint(
+                    threeScene.camera.getWorldDirection(threeScene.plane.normal),
+                    draggedObject.position
+                );
+
+                if (threeScene.raycaster.ray.intersectPlane(threeScene.plane, threeScene.intersection)) {
+                    threeScene.offset.copy(threeScene.intersection).sub(draggedObject.position);
+                }
+                dragMouseHistory.length = 0;
+            }
+        }); 
+        
+        window.addEventListener('mouseup', () => {
+            customCursor.style.transform='translate(-50%, -50%) scale(1)';
+            if (draggedObject) {
+                if (dragMouseHistory.length > 1) {
+                    const lastPoint = dragMouseHistory[dragMouseHistory.length - 1];
+                    const prevPoint = dragMouseHistory[0];
+                    const timeDelta = (lastPoint.time - prevPoint.time) / 1000;
+                    if (timeDelta > 0) {
+                         const throwVector = new THREE.Vector3(
+                            (lastPoint.x - prevPoint.x) / timeDelta,
+                            (lastPoint.y - prevPoint.y) / timeDelta,
+                            0
+                        );
+                        throwVector.multiplyScalar(0.1);
+                        draggedObject.velocity.copy(throwVector);
+                    }
+                }
+                draggedObject = null;
+            }
+        });
+
+        // ==========================================================================================
         // --- MAIN ANIMATION LOOP ---
-        function animate() { requestAnimationFrame(animate); clock.update(); drawEchoes(); if (portalActive) threeScene.renderPortal(portalContainer); threeScene.animate(); }
+        // ==========================================================================================
+        function animate() {
+            requestAnimationFrame(animate);
+            clock.update();
+            drawEchoes();
+            if (portalActive) threeScene.renderPortal(portalContainer);
+            threeScene.animate();
+        }
 
         applyTheme(UNIVERSE_THEMES[0]);
         tuhrembiGenerator.populate();
