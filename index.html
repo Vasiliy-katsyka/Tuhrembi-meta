@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Tuhrembi-meta.biosis</title>
+    <!-- NEW: TELEGRAM MINI APP SCRIPT -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         /* ------------------- */
         /* --- CORE STYLES --- */
@@ -299,12 +301,14 @@
             display: none;
             justify-content: center;
             align-items: center;
-            font-size: 15vw;
+            font-size: 10vw;
             font-weight: bold;
             text-align: center;
             text-shadow: 0 0 10px #000, 0 0 20px #000;
             opacity: 0;
             transition: opacity 0.05s;
+            line-height: 1.1;
+            padding: 1rem;
         }
     </style>
 </head>
@@ -359,12 +363,32 @@
         let heartHoverTimeout = null;
         let chaosLevel = 0.5;
 
-        // --- INTERACTION STATE ---
+        // --- INTERACTION & SETTINGS STATE ---
         let draggedObject = null;
         const dragMouseHistory = [];
+        let isSoundOn = true;
+        let isVibrationOn = false;
+        let telegramUserData = null;
 
         // ==========================================================================================
-        // FEATURE 1: MULTIVERSE CLOCK & TEMPORAL INSTABILITY
+        // VIBRATION ENGINE
+        // ==========================================================================================
+        const vibrationPatterns = [
+            [200, 100, 200],
+            [500],
+            [50, 50, 50, 50, 50, 50],
+            [100, 30, 100, 30, 100]
+        ];
+
+        function triggerVibration() {
+            if (isVibrationOn && window.navigator && window.navigator.vibrate) {
+                const pattern = vibrationPatterns[Math.floor(Math.random() * vibrationPatterns.length)];
+                window.navigator.vibrate(pattern);
+            }
+        }
+
+        // ==========================================================================================
+        // MULTIVERSE CLOCK & TEMPORAL INSTABILITY
         // ==========================================================================================
         class MultiverseClock {
             constructor(containerId) {
@@ -389,7 +413,7 @@
             update() {
                 this.hands.forEach(hand => {
                     let angle = parseFloat(hand.dataset.angle);
-                    let speed = parseFloat(hand.dataset.speed) * (1 + chaosLevel); // Speed influenced by chaos
+                    let speed = parseFloat(hand.dataset.speed) * (1 + chaosLevel);
                     
                     angle += speed * 0.1;
                     if (Math.random() > 0.995) {
@@ -418,41 +442,13 @@
         const clock = new MultiverseClock('multiverse-clock');
 
         const UNIVERSE_THEMES = [
-            // Original Set
             { name: 'Quantum Foam', colors: ['#010508', '#aaffff', '#ff00aa', '#aaff00'], font: "'Courier New', monospace", layout: ['column', 'flex-start', 'center'] },
             { name: 'Entropic Heat Death', colors: ['#300', '#622', '#944', '#f88'], font: "'Times New Roman', serif", layout: ['row-reverse', 'flex-end', 'flex-end'] },
             { name: 'Digital Singularity', colors: ['#000', '#0f0', '#0a0', '#050'], font: "'VT323', monospace", layout: ['row', 'center', 'space-between'] },
             { name: 'Void Construct', colors: ['#fff', '#000', '#555', '#aaa'], font: "'Arial', sans-serif", layout: ['column-reverse', 'center', 'space-around'] },
-            { name: 'Superstring Symphony', colors: ['#1d0d2c', '#f0f', '#0ff', '#ff0'], font: "'Georgia', serif", layout: ['row', 'stretch', 'stretch'] },
-            { name: 'Solar Flare', colors: ['#100', '#FFD700', '#FF4500', '#FFFF00'], font: "'Orbitron', sans-serif", layout: ['column', 'center', 'center'] },
-            { name: 'Glacial Rift', colors: ['#E6F7FF', '#001A29', '#005F7F', '#80DFFF'], font: "'Helvetica Neue', sans-serif", layout: ['row', 'flex-start', 'flex-start'] },
-            { name: 'Cyberpunk Grid', colors: ['#0a011f', '#ff00ff', '#00ffff', '#710193'], font: "'Major Mono Display', monospace", layout: ['column-reverse', 'flex-end', 'space-between'] },
-            { name: 'Aetherial Plane', colors: ['#f0e8ff', '#522b7a', '#c09eff', '#8d5ad1'], font: "'Playfair Display', serif", layout: ['row-reverse', 'center', 'space-around'] },
-            { name: 'Art Deco Decay', colors: ['#0F1F17', '#E8D5A2', '#A67B5B', '#4C594A'], font: "'Cinzel', serif", layout: ['row', 'center', 'space-evenly'] },
             { name: 'Blood Hive', colors: ['#2e0000', '#ff4d4d', '#ff0000', '#8b0000'], font: "'Creepster', cursive", layout: ['column', 'stretch', 'stretch'] },
-            
-            // New Additions
             { name: 'Cosmic Horror', colors: ['#02000f', '#96004b', '#4a0025', '#ff007b'], font: "'UnifrakturMaguntia', cursive", layout: ['column', 'center', 'space-around'] },
-            { name: 'Nuclear Winter', colors: ['#cccccc', '#333333', '#666666', '#999999'], font: "'Special Elite', cursive", layout: ['row', 'flex-start', 'space-between'] },
             { name: 'Flesh Construct', colors: ['#4a2e2e', '#ffb3b3', '#a76a6a', '#ff8080'], font: "'Butcherman', cursive", layout: ['column-reverse', 'stretch', 'stretch'] },
-            { name: 'Corrupted Data', colors: ['#ffff00', '#ff00ff', '#00ffff', '#000000'], font: "'Glitch Goblin', sans-serif", layout: ['row-reverse', 'flex-end', 'flex-end'] },
-            { name: 'Eldritch Machine', colors: ['#1a1a1a', '#b3ff00', '#5c8a00', '#8cff00'], font: "'Roboto Mono', monospace", layout: ['column', 'center', 'center'] },
-            { name: 'Black Hole Singularity', colors: ['#000000', '#ffffff', '#222222', '#444444'], font: "'Anonymous Pro', monospace", layout: ['row', 'center', 'center'] },
-            { name: 'Dyson Swarm', colors: ['#050505', '#ffcc00', '#ff9900', '#ff6600'], font: "'Exo 2', sans-serif", layout: ['column-reverse', 'flex-start', 'space-evenly'] },
-            { name: 'Oceanic Abyss', colors: ['#000020', '#00aaff', '#00557f', '#00ffff'], font: "'Bubbler One', sans-serif", layout: ['row', 'flex-end', 'space-between'] },
-            { name: 'Jungle Overgrowth', colors: ['#002a00', '#00ff00', '#55ff55', '#aaffaa'], font: "'Fira Code', monospace", layout: ['column', 'stretch', 'space-around'] },
-            { name: 'Molten Core', colors: ['#200000', '#ff4500', '#ff8c00', '#ffd700'], font: "'Black Ops One', sans-serif", layout: ['row-reverse', 'center', 'center'] },
-            { name: 'Phantom Zone', colors: ['#eeeeee', '#888888', '#bbbbbb', '#cccccc'], font: "'Spectral', serif", layout: ['column', 'center', 'space-between'] },
-            { name: 'Gilded Cage', colors: ['#1a1a00', '#ffd700', '#b8860b', '#f0e68c'], font: "'Uncial Antiqua', cursive", layout: ['row', 'center', 'space-evenly'] },
-            { name: 'Acid Trip', colors: ['#ff00ff', '#00ff00', '#ffff00', '#00ffff'], font: "'Monoton', cursive", layout: ['column-reverse', 'center', 'center'] },
-            { name: 'Rust Belt', colors: ['#4a2e2e', '#b7410e', '#80330f', '#d35400'], font: "'Press Start 2P', cursive", layout: ['row', 'flex-start', 'flex-start'] },
-            { name: 'Holographic Ghost', colors: ['#010105', '#00aaff', '#ff00ff', '#ffffff'], font: "'Nova Square', sans-serif", layout: ['column', 'flex-end', 'flex-end'] },
-            { name: 'Radioactive Isotope', colors: ['#1a2a1a', '#b3ff00', '#00ff00', '#ffff00'], font: "'Turret Road', sans-serif", layout: ['row', 'space-around', 'center'] },
-            { name: 'Crystalline Entity', colors: ['#e0ffff', '#40e0d0', '#00ced1', '#afeeee'], font: "'Philosopher', sans-serif", layout: ['column-reverse', 'flex-start', 'center'] },
-            { name: 'Ashen Waste', colors: ['#3d3d3d', '#a9a9a9', '#696969', '#808080'], font: "'Cormorant Garamond', serif", layout: ['row-reverse', 'stretch', 'space-between'] },
-            { name: 'Warframe', colors: ['#0c0e1a', '#c0c0c0', '#ffd700', '#87ceeb'], font: "'Warframe', sans-serif", layout: ['column', 'center', 'space-evenly'] },
-            { name: 'Subspace Anomaly', colors: ['#000010', '#9400d3', '#4b0082', '#8a2be2'], font: "'Share Tech Mono', monospace", layout: ['row', 'flex-end', 'space-around'] },
-            { name: 'Forgotten Temple', colors: ['#2f4f4f', '#a0522d', '#8b4513', '#d2691e'], font: "'Marcellus SC', serif", layout: ['column', 'flex-start', 'space-evenly'] },
         ];
 
 
@@ -541,13 +537,13 @@
                 
                 history.current_index += history.speed;
                 if (history.current_index > history.path.length) {
-                    history.current_index = 0; // Loop the replay
+                    history.current_index = 0; 
                 }
             }
         }
 
         // ==========================================================================================
-        // FEATURE 2: THE "TUHREMBI" LANGUAGE
+        // THE "TUHREMBI" LANGUAGE
         // ==========================================================================================
         class TuhrembiGenerator {
             constructor(containerId) {
@@ -616,7 +612,7 @@
 
 
         // ==========================================================================================
-        // FEATURE 3: 4D SCENE, AUDIO ENGINE & INTERACTIVITY HUB
+        // 4D SCENE, AUDIO ENGINE & INTERACTIVITY HUB
         // ==========================================================================================
         class TesseractScene {
             constructor(canvasId) {
@@ -633,18 +629,9 @@
                 this.intersection = new THREE.Vector3();
                 this.offset = new THREE.Vector3();
                 
-                // JUMPSCARE ASSETS
-                this.creepyImageURLs = [
-                    'https://images.pexels.com/photos/1729903/pexels-photo-1729903.jpeg', 
-                    'https://images.unsplash.com/photo-1599318042475-27a170744477',
-                    'https://images.unsplash.com/photo-1507502707542-93699351512a',
-                    'https://images.pexels.com/photos/277627/pexels-photo-277627.jpeg',
-                    'https://images.pexels.com/photos/7166723/pexels-photo-7166723.jpeg'
-                ];
                 this.scarePhrases = [
-                    "DEATH IS NEAR", "U R HACKED", "BISOKJ", 
-                    "CAN YOU SEE ME?", "BEHIND YOU", "IT'S TOO LATE", 
-                    "GET OUT", "THEY ARE WATCHING", "WAKE UP"
+                    "DEATH IS NEAR", "U R HACKED", "BISOKJ", "CAN YOU SEE ME?", 
+                    "BEHIND YOU", "IT'S TOO LATE", "GET OUT", "THEY ARE WATCHING", "WAKE UP"
                 ];
                 this.jumpscareOverlay = document.getElementById('jumpscare-overlay');
                 this.textScareOverlay = document.getElementById('text-scare-overlay');
@@ -678,6 +665,7 @@
             }
             
             initAudio() {
+                if (!isSoundOn) return;
                 const audioContext = this.listener.context;
                 const masterGain = audioContext.createGain();
                 masterGain.gain.value = 0.15;
@@ -723,7 +711,7 @@
                 this.audioNodes.stutterLFO = stutterLFO;
                 
                 const jumpscareGain = audioContext.createGain();
-                jumpscareGain.gain.value = 3.0; // Very loud
+                jumpscareGain.gain.value = 3.0;
                 const jumpscareCompressor = audioContext.createDynamicsCompressor(); 
                 jumpscareCompressor.threshold.setValueAtTime(-3, audioContext.currentTime);
                 jumpscareCompressor.knee.setValueAtTime(10, audioContext.currentTime);
@@ -747,7 +735,7 @@
             }
 
             triggerJumpSound() {
-                if (!this.audioNodes.masterGain) return;
+                if (!isSoundOn || !this.audioNodes.masterGain) return;
                 const audioContext = this.listener.context;
                 const time = audioContext.currentTime;
 
@@ -767,6 +755,7 @@
 
             triggerScreamer() {
                 if (isScreamerActive) return;
+                triggerVibration();
                 isScreamerActive = true;
                 this.heart.visible = true;
                 
@@ -778,18 +767,20 @@
                 }
                 this.heart.scale.set(10, 10, 10);
 
-                const audioContext = this.listener.context;
-                const time = audioContext.currentTime;
-                const screamerOsc = audioContext.createOscillator();
-                const screamerGain = audioContext.createGain();
-                screamerOsc.type = 'sawtooth';
-                screamerOsc.connect(screamerGain).connect(this.audioNodes.distortion);
-                screamerGain.gain.setValueAtTime(0.7, time);
-                screamerOsc.frequency.setValueAtTime(2000, time);
-                screamerOsc.frequency.linearRampToValueAtTime(8000, time + 0.7);
-                screamerGain.gain.linearRampToValueAtTime(0, time + 0.8);
-                screamerOsc.start(time);
-                screamerOsc.stop(time + 0.8);
+                if (isSoundOn) {
+                    const audioContext = this.listener.context;
+                    const time = audioContext.currentTime;
+                    const screamerOsc = audioContext.createOscillator();
+                    const screamerGain = audioContext.createGain();
+                    screamerOsc.type = 'sawtooth';
+                    screamerOsc.connect(screamerGain).connect(this.audioNodes.distortion);
+                    screamerGain.gain.setValueAtTime(0.7, time);
+                    screamerOsc.frequency.setValueAtTime(2000, time);
+                    screamerOsc.frequency.linearRampToValueAtTime(8000, time + 0.7);
+                    screamerGain.gain.linearRampToValueAtTime(0, time + 0.8);
+                    screamerOsc.start(time);
+                    screamerOsc.stop(time + 0.8);
+                }
                 
                 setTimeout(() => this.endScreamer(), 800);
             }
@@ -803,7 +794,7 @@
             }
 
             triggerLoudNoise() {
-                if (!this.audioNodes.jumpscareGain) return;
+                if (!isSoundOn || !this.audioNodes.jumpscareGain) return;
                 const audioContext = this.listener.context;
                 const time = audioContext.currentTime;
 
@@ -826,17 +817,16 @@
             
             triggerJumpscare() {
                 if (isScreamerActive) return;
-                
                 this.triggerLoudNoise();
+                triggerVibration();
                 
-                const imageUrl = this.creepyImageURLs[Math.floor(Math.random() * this.creepyImageURLs.length)];
+                // Fetch a new image every time to avoid caching
+                const imageUrl = 'https://this-person-does-not-exist.com/?' + new Date().getTime();
                 this.jumpscareOverlay.style.backgroundImage = `url(${imageUrl})`;
                 
                 const filters = `
-                    blur(${Math.random() * 5}px)
-                    contrast(${Math.random() * 100 + 150}%)
-                    saturate(${Math.random() * 50}%)
-                    hue-rotate(${Math.floor(Math.random() * 360)}deg)
+                    blur(${Math.random() * 5}px) contrast(${Math.random() * 100 + 150}%)
+                    saturate(${Math.random() * 50}%) hue-rotate(${Math.floor(Math.random() * 360)}deg)
                     brightness(${Math.random() * 50 + 75}%)
                 `;
                 this.jumpscareOverlay.style.filter = filters;
@@ -846,16 +836,14 @@
                 
                 setTimeout(() => {
                     this.jumpscareOverlay.style.opacity = '0';
-                    setTimeout(() => {
-                        this.jumpscareOverlay.style.display = 'none';
-                    }, 100);
+                    setTimeout(() => { this.jumpscareOverlay.style.display = 'none'; }, 100);
                 }, Math.random() * 150 + 100);
             }
 
             triggerTextScare() {
                 if (isScreamerActive) return;
-
                 this.triggerLoudNoise();
+                triggerVibration();
 
                 const phrase = this.scarePhrases[Math.floor(Math.random() * this.scarePhrases.length)];
                 this.textScareOverlay.textContent = phrase;
@@ -869,9 +857,7 @@
 
                 setTimeout(() => {
                     this.textScareOverlay.style.opacity = '0';
-                    setTimeout(() => {
-                        this.textScareOverlay.style.display = 'none';
-                    }, 100);
+                    setTimeout(() => { this.textScareOverlay.style.display = 'none'; }, 100);
                 }, Math.random() * 250 + 150);
             }
 
@@ -880,16 +866,7 @@
                 const vertices = new Float32Array(32 * 3);
                 geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
                 const indices = [];
-                for (let i = 0; i < 16; i++) {
-                    for (let j = i + 1; j < 16; j++) {
-                        const p1 = this.points4D[i];
-                        const p2 = this.points4D[j];
-                        const dist = Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y) + Math.abs(p1.z - p2.z) + Math.abs(p1.w - p2.w);
-                        if (dist === 2) {
-                            indices.push(i, j);
-                        }
-                    }
-                }
+                for (let i = 0; i < 16; i++) { for (let j = i + 1; j < 16; j++) { const p1 = this.points4D[i]; const p2 = this.points4D[j]; const dist = Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y) + Math.abs(p1.z - p2.z) + Math.abs(p1.w - p2.w); if (dist === 2) { indices.push(i, j); } } }
                 geometry.setIndex(indices);
                 this.tesseract = new THREE.LineSegments(geometry, this.tesseractMaterial);
                 this.scene.add(this.tesseract);
@@ -900,7 +877,6 @@
             createGlitchPlane() { const geometry = new THREE.PlaneGeometry(window.innerWidth/50, window.innerHeight/50); const material = new THREE.ShaderMaterial({ uniforms:{time:{value:1.0},color1:{value:new THREE.Color(0xff00ff)},color2:{value:new THREE.Color(0x00ffff)},},vertexShader:` varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); } `,fragmentShader:` uniform float time; uniform vec3 color1; uniform vec3 color2; varying vec2 vUv; float random (vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123); } void main() { vec2 p = vUv; p.x += sin(p.y * 10.0 + time) * 0.05 * random(p); p.y += cos(p.x * 10.0 + time) * 0.05 * random(p); float r = fract(p.x * p.y * time * 5.0); float g = fract(p.x * p.y * time * 5.1); float b = fract(p.x * p.y * time * 5.2); gl_FragColor = vec4(mix(color1, color2, random(p)), 1.0) * vec4(r,g,b,1.0); }`, transparent: true }); const plane = new THREE.Mesh(geometry, material); plane.position.z = -2; return plane; }
             
             updateUniverse(theme) {
-                // Visual Updates
                 this.gravity.set((Math.random()-0.5)*0.0002,(Math.random()-0.5)*0.0002,(Math.random()-0.5)*0.0002);
                 const c1=new THREE.Color(theme.colors[2]); const c2=new THREE.Color(theme.colors[3]);
                 this.tesseractMaterial.color = c1;
@@ -908,126 +884,61 @@
                 this.glitchPlane.material.uniforms.color1.value = c1; this.glitchPlane.material.uniforms.color2.value = c2;
                 this.heart.material.color = c2;
 
-                // Audio Updates
-                if (this.audioNodes.masterGain) {
+                if (isSoundOn && this.audioNodes.masterGain) {
                     const audioContext = this.listener.context; const time = audioContext.currentTime;
                     const val = (s, d) => parseInt(s.substring(d, d + 2), 16) / 255;
-                    const humFreq1 = 30 + val(theme.colors[0], 1) * 40;
-                    const humFreq2 = humFreq1 + 5 + val(theme.colors[1], 3) * 10;
-                    this.audioNodes.humOsc1.frequency.linearRampToValueAtTime(humFreq1, time + 1);
-                    this.audioNodes.humOsc2.frequency.linearRampToValueAtTime(humFreq2, time + 1);
-                    const noiseFreq = 200 + val(theme.colors[2], 1) * 3000;
-                    this.audioNodes.noiseFilter.frequency.linearRampToValueAtTime(noiseFreq, time + 1);
-                    const sirenSpeed = 0.1 + val(theme.colors[3], 5) * 5;
-                    this.audioNodes.sirenLFO.frequency.linearRampToValueAtTime(sirenSpeed, time + 1);
-                    const stutterSpeed = 5 + (theme.name.length % 15);
-                    this.audioNodes.stutterLFO.frequency.linearRampToValueAtTime(stutterSpeed, time + 1);
-                    const distortionAmount = (theme.name.toLowerCase().includes('blood') || theme.name.toLowerCase().includes('horror')) ? 400 : 80;
-                    this.audioNodes.distortion.curve = this.makeDistortionCurve(distortionAmount);
+                    const humFreq1 = 30 + val(theme.colors[0], 1) * 40; const humFreq2 = humFreq1 + 5 + val(theme.colors[1], 3) * 10;
+                    this.audioNodes.humOsc1.frequency.linearRampToValueAtTime(humFreq1, time + 1); this.audioNodes.humOsc2.frequency.linearRampToValueAtTime(humFreq2, time + 1);
+                    const noiseFreq = 200 + val(theme.colors[2], 1) * 3000; this.audioNodes.noiseFilter.frequency.linearRampToValueAtTime(noiseFreq, time + 1);
+                    const sirenSpeed = 0.1 + val(theme.colors[3], 5) * 5; this.audioNodes.sirenLFO.frequency.linearRampToValueAtTime(sirenSpeed, time + 1);
+                    const stutterSpeed = 5 + (theme.name.length % 15); this.audioNodes.stutterLFO.frequency.linearRampToValueAtTime(stutterSpeed, time + 1);
+                    const distortionAmount = (theme.name.toLowerCase().includes('blood') || theme.name.toLowerCase().includes('horror')) ? 400 : 80; this.audioNodes.distortion.curve = this.makeDistortionCurve(distortionAmount);
                 }
             }
 
             updateHeartEffect() {
                 if (isScreamerActive) return;
-
-                const heartScreenPos = this.heart.position.clone().project(this.camera);
-                const mouseVec = new THREE.Vector2(mouse.x, mouse.y);
-                const heartVec = new THREE.Vector2(heartScreenPos.x, heartScreenPos.y);
-                const distance = mouseVec.distanceTo(heartVec);
-
+                const heartScreenPos = this.heart.position.clone().project(this.camera); const mouseVec = new THREE.Vector2(mouse.x, mouse.y); const heartVec = new THREE.Vector2(heartScreenPos.x, heartScreenPos.y); const distance = mouseVec.distanceTo(heartVec);
                 const hoverThreshold = 0.1;
-                if (distance < hoverThreshold) {
-                    this.heart.material.opacity = 1.0;
-                    this.heart.scale.set(1.5, 1.5, 1.5);
-                    this.audioNodes.humOsc1.frequency.value += 5;
-                    this.audioNodes.humOsc2.frequency.value += 5;
-
-                    if (!heartHoverTimeout) {
-                        heartHoverTimeout = setTimeout(() => {
-                            timeJump();
-                            heartHoverTimeout = null;
-                        }, 2000); 
-                    }
-                } else {
-                    this.heart.material.opacity = 0.8;
-                    this.heart.scale.set(1, 1, 1);
-                    if (heartHoverTimeout) {
-                        clearTimeout(heartHoverTimeout);
-                        heartHoverTimeout = null;
-                    }
-                }
+                if (distance < hoverThreshold) { this.heart.material.opacity = 1.0; this.heart.scale.set(1.5, 1.5, 1.5); if(isSoundOn) { this.audioNodes.humOsc1.frequency.value += 5; this.audioNodes.humOsc2.frequency.value += 5; } if (!heartHoverTimeout) { heartHoverTimeout = setTimeout(() => { timeJump(); heartHoverTimeout = null; }, 2000); }
+                } else { this.heart.material.opacity = 0.8; this.heart.scale.set(1, 1, 1); if (heartHoverTimeout) { clearTimeout(heartHoverTimeout); heartHoverTimeout = null; } }
                 this.heart.visible = distance < 1.0; 
             }
             
             animate() {
-                // --- INCREASED JUMPSCARE CHANCES ---
-                if (Math.random() < (0.0005 + chaosLevel * 0.002)) {
-                    this.triggerJumpscare();
-                }
-                if (Math.random() < (0.0005 + chaosLevel * 0.0025)) {
-                    this.triggerTextScare();
-                }
+                if (Math.random() < (0.0005 + chaosLevel * 0.002)) { this.triggerJumpscare(); }
+                if (Math.random() < (0.0005 + chaosLevel * 0.0025)) { this.triggerTextScare(); }
 
-                // Update particles
                 for (let i = this.particleSystems.length - 1; i >= 0; i--) {
-                    const ps = this.particleSystems[i];
-                    const positions = ps.system.geometry.attributes.position.array;
-                    for (let j = 0; j < ps.velocities.length; j++) {
-                        positions[j*3] += ps.velocities[j].x;
-                        positions[j*3+1] += ps.velocities[j].y;
-                        positions[j*3+2] += ps.velocities[j].z;
-                    }
-                    ps.system.geometry.attributes.position.needsUpdate = true;
-                    ps.life -= 0.01;
-                    ps.system.material.opacity = ps.life;
-                    if (ps.life <= 0) {
-                        this.scene.remove(ps.system);
-                        this.particleSystems.splice(i, 1);
-                    }
+                    const ps = this.particleSystems[i]; const positions = ps.system.geometry.attributes.position.array;
+                    for (let j = 0; j < ps.velocities.length; j++) { positions[j*3] += ps.velocities[j].x; positions[j*3+1] += ps.velocities[j].y; positions[j*3+2] += ps.velocities[j].z; }
+                    ps.system.geometry.attributes.position.needsUpdate = true; ps.life -= 0.01; ps.system.material.opacity = ps.life;
+                    if (ps.life <= 0) { this.scene.remove(ps.system); this.particleSystems.splice(i, 1); }
                 }
 
-                // Update Tesseract
                 const positionAttribute = this.tesseract.geometry.getAttribute('position');
                 for (let i = 0; i < 16; i++) {
                     let p4 = this.points4D[i].clone();
-                    if (!isScreamerActive) {
-                       p4 = this.rotate4D(p4, this.angles.xy, 'xy');
-                       p4 = this.rotate4D(p4, this.angles.zw, 'zw');
-                       p4 = this.rotate4D(p4, this.wAngle, 'xw');
-                    }
-                    const p3 = this.project4Dto3D(p4);
-                    positionAttribute.setXYZ(i, p3.x, p3.y, p3.z);
+                    if (!isScreamerActive) { p4 = this.rotate4D(p4, this.angles.xy, 'xy'); p4 = this.rotate4D(p4, this.angles.zw, 'zw'); p4 = this.rotate4D(p4, this.wAngle, 'xw'); }
+                    const p3 = this.project4Dto3D(p4); positionAttribute.setXYZ(i, p3.x, p3.y, p3.z);
                 }
                 positionAttribute.needsUpdate = true;
                 
-                if (isScreamerActive) {
-                    this.renderer.render(this.scene, this.camera);
-                    return;
-                }
+                if (isScreamerActive) { this.renderer.render(this.scene, this.camera); return; }
 
                 this.updateHeartEffect();
-                this.glitchPlane.material.uniforms.time.value += 0.02 * (1 + chaosLevel);
-                this.glitchPlane.visible = chaosLevel > 0.75;
-                const rotSpeed = 0.001 + chaosLevel * 0.002;
-                this.angles.xy += rotSpeed; this.angles.zw += rotSpeed * 1.5;
+                this.glitchPlane.material.uniforms.time.value += 0.02 * (1 + chaosLevel); this.glitchPlane.visible = chaosLevel > 0.75;
+                const rotSpeed = 0.001 + chaosLevel * 0.002; this.angles.xy += rotSpeed; this.angles.zw += rotSpeed * 1.5;
 
                 this.floatingMeshes.forEach(mesh => {
                     if (draggedObject !== mesh) {
-                        const g = this.gravity.clone().multiplyScalar(1 + chaosLevel * 5);
-                        mesh.velocity.add(g);
-                        mesh.position.add(mesh.velocity);
-                        mesh.rotation.x += mesh.velocity.x;
-                        mesh.rotation.y += mesh.velocity.y;
-                        
-                        if (mesh.position.length() > 10) { 
-                            mesh.position.set(0,0,0);
-                            mesh.velocity.set((Math.random()-0.5)*0.01,(Math.random()-0.5)*0.01,(Math.random()-0.5)*0.01);
-                        }
+                        const g = this.gravity.clone().multiplyScalar(1 + chaosLevel * 5); mesh.velocity.add(g); mesh.position.add(mesh.velocity);
+                        mesh.rotation.x += mesh.velocity.x; mesh.rotation.y += mesh.velocity.y;
+                        if (mesh.position.length() > 10) { mesh.position.set(0,0,0); mesh.velocity.set((Math.random()-0.5)*0.01,(Math.random()-0.5)*0.01,(Math.random()-0.5)*0.01); }
                     }
                 });
 
-                this.portalObject.rotation.x += 0.005; this.portalObject.rotation.y += 0.007;
-                this.renderer.render(this.scene, this.camera);
+                this.portalObject.rotation.x += 0.005; this.portalObject.rotation.y += 0.007; this.renderer.render(this.scene, this.camera);
             }
 
             handleResize() {this.camera.aspect=window.innerWidth/window.innerHeight;this.camera.updateProjectionMatrix();this.renderer.setSize(window.innerWidth,window.innerHeight);echoCanvas.width=window.innerWidth;echoCanvas.height=window.innerHeight;}
@@ -1041,18 +952,12 @@
         
         window.addEventListener('click', (event) => {
             const screamerChance = chaosLevel * 0.10; 
-            if (Math.random() < screamerChance) {
-                threeScene.triggerScreamer();
-                return;
-            }
-
-            if (Math.random() > 0.95 && !portalActive) {
-                 portalActive = true; portalContainer.classList.add('active'); setTimeout(() => { portalContainer.classList.remove('active'); portalActive = false; }, Math.random() * 2000 + 1000);
-            }
+            if (Math.random() < screamerChance) { threeScene.triggerScreamer(); return; }
+            if (Math.random() > 0.95 && !portalActive) { portalActive = true; portalContainer.classList.add('active'); setTimeout(() => { portalContainer.classList.remove('active'); portalActive = false; }, Math.random() * 2000 + 1000); }
         });
 
         // ==========================================================================================
-        // FEATURE 4: CHAOTIC UI ELEMENTS & INTERACTION LISTENERS
+        // CHAOTIC UI & INTERACTION
         // ==========================================================================================
         class DataStreamManager {
             constructor(count=10){this.streams=[];for(let i=0;i<count;i++){const stream=document.createElement('div');stream.className='data-stream';document.body.appendChild(stream);this.streams.push(stream);} this.resetStreams();}
@@ -1065,23 +970,19 @@
         document.getElementById('chaos-slider').addEventListener('input', e => { 
             chaosLevel = e.target.value / 100;
             if (threeScene.audioNodes.masterGain) { 
-                threeScene.audioNodes.masterGain.gain.value = 0.05 + chaosLevel * 0.25; 
+                const gain = isSoundOn ? (0.05 + chaosLevel * 0.25) : 0;
+                threeScene.audioNodes.masterGain.gain.value = gain;
             }
         });
         const customCursor = document.getElementById('custom-cursor');
         
         window.addEventListener('mousemove', e => { 
-            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1; mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
             customCursor.style.left=`${e.clientX}px`; customCursor.style.top=`${e.clientY}px`; 
             cursorHistory.push({x:e.clientX,y:e.clientY}); if(cursorHistory.length>200)cursorHistory.shift();
-
             if (draggedObject) {
-                dragMouseHistory.push({x: mouse.x, y: mouse.y, time: performance.now()});
-                if (dragMouseHistory.length > 10) dragMouseHistory.shift();
-
-                threeScene.raycaster.setFromCamera(mouse, threeScene.camera);
-                threeScene.raycaster.ray.intersectPlane(threeScene.plane, threeScene.intersection);
+                dragMouseHistory.push({x: mouse.x, y: mouse.y, time: performance.now()}); if (dragMouseHistory.length > 10) dragMouseHistory.shift();
+                threeScene.raycaster.setFromCamera(mouse, threeScene.camera); threeScene.raycaster.ray.intersectPlane(threeScene.plane, threeScene.intersection);
                 draggedObject.position.copy(threeScene.intersection.sub(threeScene.offset));
             }
         });
@@ -1090,19 +991,10 @@
             customCursor.style.transform='translate(-50%, -50%) scale(0.5)';
             threeScene.raycaster.setFromCamera(mouse, threeScene.camera);
             const intersects = threeScene.raycaster.intersectObjects(threeScene.floatingMeshes);
-
             if (intersects.length > 0) {
-                draggedObject = intersects[0].object;
-                draggedObject.velocity.set(0, 0, 0); 
-                
-                threeScene.plane.setFromNormalAndCoplanarPoint(
-                    threeScene.camera.getWorldDirection(threeScene.plane.normal),
-                    draggedObject.position
-                );
-
-                if (threeScene.raycaster.ray.intersectPlane(threeScene.plane, threeScene.intersection)) {
-                    threeScene.offset.copy(threeScene.intersection).sub(draggedObject.position);
-                }
+                draggedObject = intersects[0].object; draggedObject.velocity.set(0, 0, 0); 
+                threeScene.plane.setFromNormalAndCoplanarPoint(threeScene.camera.getWorldDirection(threeScene.plane.normal), draggedObject.position);
+                if (threeScene.raycaster.ray.intersectPlane(threeScene.plane, threeScene.intersection)) { threeScene.offset.copy(threeScene.intersection).sub(draggedObject.position); }
                 dragMouseHistory.length = 0;
             }
         }); 
@@ -1111,17 +1003,11 @@
             customCursor.style.transform='translate(-50%, -50%) scale(1)';
             if (draggedObject) {
                 if (dragMouseHistory.length > 1) {
-                    const lastPoint = dragMouseHistory[dragMouseHistory.length - 1];
-                    const prevPoint = dragMouseHistory[0];
+                    const lastPoint = dragMouseHistory[dragMouseHistory.length - 1]; const prevPoint = dragMouseHistory[0];
                     const timeDelta = (lastPoint.time - prevPoint.time) / 1000;
                     if (timeDelta > 0) {
-                         const throwVector = new THREE.Vector3(
-                            (lastPoint.x - prevPoint.x) / timeDelta,
-                            (lastPoint.y - prevPoint.y) / timeDelta,
-                            0
-                        );
-                        throwVector.multiplyScalar(0.1);
-                        draggedObject.velocity.copy(throwVector);
+                         const throwVector = new THREE.Vector3( (lastPoint.x - prevPoint.x) / timeDelta, (lastPoint.y - prevPoint.y) / timeDelta, 0 );
+                        throwVector.multiplyScalar(0.1); draggedObject.velocity.copy(throwVector);
                     }
                 }
                 draggedObject = null;
@@ -1129,7 +1015,64 @@
         });
 
         // ==========================================================================================
-        // --- MAIN ANIMATION LOOP ---
+        // TELEGRAM MINI APP INTEGRATION
+        // ==========================================================================================
+        function showSettingsPopup() {
+            if (!window.Telegram || !window.Telegram.WebApp) return;
+            const tg = window.Telegram.WebApp;
+            tg.showPopup({
+                title: 'Settings',
+                message: 'Control your sensory experience.',
+                buttons: [
+                    { id: 'toggle_sound', type: 'default', text: `Sound: ${isSoundOn ? 'ON' : 'OFF'}` },
+                    { id: 'toggle_vibration', type: 'default', text: `Vibration: ${isVibrationOn ? 'ON' : 'OFF'}` },
+                    { type: 'cancel' }
+                ]
+            }, (buttonId) => {
+                if (buttonId === 'toggle_sound') {
+                    isSoundOn = !isSoundOn;
+                    if (threeScene.audioNodes.masterGain) {
+                        const gain = isSoundOn ? (0.05 + chaosLevel * 0.25) : 0;
+                        threeScene.audioNodes.masterGain.gain.value = gain;
+                    }
+                    showSettingsPopup(); // Re-open popup to show new state
+                } else if (buttonId === 'toggle_vibration') {
+                    isVibrationOn = !isVibrationOn;
+                    if (isVibrationOn && window.navigator.vibrate) window.navigator.vibrate(100);
+                    showSettingsPopup(); // Re-open popup to show new state
+                }
+            });
+        }
+
+        function initializeTelegramIntegration() {
+            try {
+                if (window.Telegram && window.Telegram.WebApp) {
+                    const tg = window.Telegram.WebApp;
+                    tg.ready();
+                    tg.expand();
+                    telegramUserData = tg.initDataUnsafe.user;
+                    if (telegramUserData) {
+                        if (telegramUserData.first_name) {
+                            threeScene.scarePhrases.push(`WE SEE YOU, ${telegramUserData.first_name.toUpperCase()}`);
+                        }
+                        if (telegramUserData.username) {
+                            threeScene.scarePhrases.push(`@${telegramUserData.username.toUpperCase()}`);
+                        }
+                        threeScene.scarePhrases.push(`ID:${telegramUserData.id}`);
+                        threeScene.scarePhrases.push(`THEY SPEAK ${telegramUserData.language_code.toUpperCase()}`);
+                    }
+                    if (tg.SettingsButton) {
+                        tg.SettingsButton.show();
+                        tg.SettingsButton.onClick(showSettingsPopup);
+                    }
+                }
+            } catch (e) {
+                console.error("Telegram Web App integration failed:", e);
+            }
+        }
+        
+        // ==========================================================================================
+        // MAIN ANIMATION LOOP
         // ==========================================================================================
         function animate() {
             requestAnimationFrame(animate);
@@ -1141,6 +1084,7 @@
 
         applyTheme(UNIVERSE_THEMES[0]);
         tuhrembiGenerator.populate();
+        initializeTelegramIntegration(); // Initialize Telegram features
         timeJump();
         animate();
         window.addEventListener('resize', () => threeScene.handleResize());
