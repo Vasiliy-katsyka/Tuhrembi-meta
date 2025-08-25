@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Tuhrembi-meta.biosis</title>
-    <!-- NEW: TELEGRAM MINI APP SCRIPT -->
+    <!-- TELEGRAM MINI APP SCRIPT -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         /* ------------------- */
@@ -820,7 +820,6 @@
                 this.triggerLoudNoise();
                 triggerVibration();
                 
-                // Fetch a new image every time to avoid caching
                 const imageUrl = 'https://this-person-does-not-exist.com/?' + new Date().getTime();
                 this.jumpscareOverlay.style.backgroundImage = `url(${imageUrl})`;
                 
@@ -1049,7 +1048,10 @@
                 if (window.Telegram && window.Telegram.WebApp) {
                     const tg = window.Telegram.WebApp;
                     tg.ready();
-                    tg.expand();
+                    
+                    // --- CORRECTED FULLSCREEN CALL ---
+                    tg.requestFullscreen();
+
                     telegramUserData = tg.initDataUnsafe.user;
                     if (telegramUserData) {
                         if (telegramUserData.first_name) {
